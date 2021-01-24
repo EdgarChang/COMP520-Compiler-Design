@@ -10,10 +10,10 @@ void main() {
 
   // read n from the standard input
   n = read_i();
-  
+  /**/
   first = 0;
   second = 1;
-    
+  char s = '\\';
   print_s((char*)"First ");
   print_i(n);
   print_s((char*)" terms of Fibonacci series are : ");

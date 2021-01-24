@@ -30,7 +30,7 @@ public class Token {
         INT,  // "int"
         VOID, // "void"
         CHAR, // "char"
-
+        
         // keywords
         IF,     // "if"
         ELSE,   // "else"
