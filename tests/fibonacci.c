@@ -9,8 +9,9 @@ void main() {
   char t;
 
   // read n from the standard input
+  
   n = read_i();
-  /**/
+
   first = 0;
   second = 1;
   char s = '\\';
@@ -19,7 +20,7 @@ void main() {
   print_s((char*)" terms of Fibonacci series are : ");
  
   c = 0;
-  while (c < n) {
+  while (c < n){
     if ( c <= 1 )
       next = c;
     else

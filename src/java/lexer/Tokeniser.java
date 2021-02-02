@@ -33,6 +33,7 @@ public class Tokeniser {
              result = next();
         } catch (EOFException eof) {
             // end of file, nothing to worry about, just return EOF token
+        	
             return new Token(TokenClass.EOF, scanner.getLine(), scanner.getColumn());
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -50,10 +51,15 @@ public class Tokeniser {
 
         int line = scanner.getLine();
         int column = scanner.getColumn();
+        char c;
+        try {
+        	// get the next character
+        	c = scanner.next();
+        } catch (EOFException eof) {
+        	//return new Token(TokenClass.EOF, scanner.getLine(), scanner.getColumn());
+        	throw new EOFException();
+        }
 
-        // get the next character
-        char c = scanner.next();
-       
         // skip white spaces
         if (Character.isWhitespace(c))
             return next();
