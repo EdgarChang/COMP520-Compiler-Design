@@ -62,7 +62,8 @@ public class Main {
         Tokeniser tokeniser = new Tokeniser(scanner);
         if (mode == Mode.LEXER) {
             for (Token t = tokeniser.nextToken(); t.tokenClass != Token.TokenClass.EOF; t = tokeniser.nextToken()) 
-            	System.out.println(t);
+            	{System.out.print(t.position);System.out.println(t);}
+            	
             if (tokeniser.getErrorCount() == 0)
         		System.out.println("Lexing: pass");
     	    else
