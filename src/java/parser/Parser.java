@@ -106,6 +106,7 @@ public class Parser {
         }
 
         error(expected);
+        nextToken();
         return null;
     }
 
@@ -161,7 +162,7 @@ public class Parser {
     			expect(TokenClass.INT_LITERAL);
     			expect(TokenClass.RSBR);
     		}
-    		parseStatementPrimes();
+    		expect(TokenClass.SC);
     		parseVarDecls();
     	} else if(accept(TokenClass.STRUCT) && lookAhead(3).tokenClass != TokenClass.LPAR) {
     		parseTypes();
@@ -171,7 +172,7 @@ public class Parser {
     			expect(TokenClass.INT_LITERAL);
     			expect(TokenClass.LSBR);
     		}
-    		parseStatementPrimes();
+    		expect(TokenClass.SC);
     		parseVarDecls();
     	}
     }
@@ -179,7 +180,6 @@ public class Parser {
     private void parseFunDecls() {
     	
     	while(accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT)) {
-    		parseVarDecls();
     		parseTypes();
     		expect(TokenClass.IDENTIFIER);
     		expect(TokenClass.LPAR);
@@ -217,7 +217,6 @@ public class Parser {
     	expect(TokenClass.LBRA);
     	parseVarDecls();
     	while(!accept(TokenClass.RBRA)) {
-    		parseVarDecls();
         	parseStatements();
     	}
     	expect(TokenClass.RBRA);
@@ -313,6 +312,12 @@ public class Parser {
     		parseTypes();
     		expect(TokenClass.RPAR);
     		parseExpressionPrimes();
+    	} 
+    	
+    	else {
+    		expect(TokenClass.INT_LITERAL, TokenClass.CHAR_LITERAL, TokenClass.STRING_LITERAL,
+    				TokenClass.IDENTIFIER, TokenClass.LPAR, TokenClass.MINUS, TokenClass.PLUS,
+    				TokenClass.AND, TokenClass.ASTERIX, TokenClass.SIZEOF);
     	}
     	
     }
