@@ -216,7 +216,7 @@ public class Parser {
     private void parseBlocks() {
     	expect(TokenClass.LBRA);
     	parseVarDecls();
-    	while(!accept(TokenClass.RBRA)) {
+    	while(!accept(TokenClass.RBRA, TokenClass.EOF)) {
         	parseStatements();
     	}
     	expect(TokenClass.RBRA);
@@ -356,5 +356,4 @@ public class Parser {
     	}
     	
     }
-    // to be completed ...
 }
