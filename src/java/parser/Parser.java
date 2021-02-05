@@ -140,10 +140,18 @@ public class Parser {
 
     private void parseStructDecls() {
         if(accept(TokenClass.STRUCT)) {
-        	nextToken();
+        	expect(TokenClass.STRUCT);
         	expect(TokenClass.IDENTIFIER);
         	expect(TokenClass.LBRA);
-        	parseVarDecls();
+        	parseTypes();
+        	expect(TokenClass.IDENTIFIER);
+        	if(accept(TokenClass.LSBR)) {
+    			nextToken();
+    			expect(TokenClass.INT_LITERAL);
+    			expect(TokenClass.RSBR);
+    		}
+    		expect(TokenClass.SC);
+    		parseVarDecls();
         	expect(TokenClass.RBRA);
         	expect(TokenClass.SC);
         	parseStructDecls();
@@ -170,7 +178,7 @@ public class Parser {
     		if(accept(TokenClass.LSBR)) {
     			nextToken();
     			expect(TokenClass.INT_LITERAL);
-    			expect(TokenClass.LSBR);
+    			expect(TokenClass.RSBR);
     		}
     		expect(TokenClass.SC);
     		parseVarDecls();

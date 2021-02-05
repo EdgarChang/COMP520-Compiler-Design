@@ -2,6 +2,17 @@
 // Written by Daniel Hillerström
 
 #include "minic-stdlib.h"
+
+#include "minic-stdlib.h"
+
+#include "minic-stdlib.h"
+#include "minic-stdlib.h"
+#include "minic-stdlib.h"
+#include "minic-stdlib.h"
+struct ok{int s;struct ok hello;};
+struct ok{int s;struct ok hello[90];struct ok hello;struct ok hello;};struct ok{int s;};struct ok{int s;};
+struct ok{int s;struct ok hello;struct ok hello;struct ok hello;};struct ok{int s;int s;int s;int s;};
+
 // Board layout
 char a11; char a12; char a13;
 char a21; char a22; char a23;
