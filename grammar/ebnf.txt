@@ -31,14 +31,16 @@ stmt       ::= block
 
 block      ::= "{" (vardecl)* (stmt)* "}"
 
-exp        ::= "(" exp ")"
-             | (IDENT | INT_LITERAL)
+exp        ::= 
+             | 
              | ("-" | "+") exp
              | CHAR_LITERAL
              | STRING_LITERAL
-             | exp (">" | "<" | ">=" | "<=" | "!=" | "==" | "+" | "-" | "/" | "*" | "%" | "||" | "&&") exp  # binary operators
+             | exp [(">" | "<" | ">=" | "<=" | "!=" | "==" | "+" | "-" | "%" | "||" | "&&") exp]  # binary operators
              | arrayaccess | fieldaccess | valueat | addressof | funcall | sizeof | typecast
-
+			 |term (("+"|"-")term)*
+term	   ::= factor [("*" | "/") factor]
+factor	   ::= (IDENT | INT_LITERAL | "(" exp ")")
 funcall      ::= IDENT "(" [ exp ("," exp)* ] ")" # function call
 arrayaccess  ::= exp "[" exp "]"                  # array access
 fieldaccess  ::= exp "." IDENT                    # structure field member access
