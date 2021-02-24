@@ -13,7 +13,17 @@ public class ASTPrinter implements ASTVisitor<Void> {
     @Override
     public Void visitBlock(Block b) {
         writer.print("Block(");
-        // to complete
+        String delimiter = "";
+        for (VarDecl vd : b.varDecls) {
+        	writer.print(delimiter);
+            delimiter = ",";
+            vd.accept(this);
+        }
+        for (Stmt statement : b.stmts) {
+        	writer.print(delimiter);
+            delimiter = ",";
+            statement.accept(this);
+        }
         writer.print(")");
         return null;
     }
@@ -75,133 +85,223 @@ public class ASTPrinter implements ASTVisitor<Void> {
 
     @Override
     public Void visitBaseType(BaseType bt) {
-        // to complete ...
+        writer.print(bt.name());
         return null;
     }
 
     @Override
     public Void visitStructTypeDecl(StructTypeDecl st) {
-        // to complete ...
+    	writer.print("StructTypeDecl(");
+        st.type.accept(this);
+        String delimiter = ",";
+        for (VarDecl vd : st.params) {
+            writer.print(delimiter);
+            vd.accept(this);
+        }
+        writer.print(")");
         return null;
     }
 
 	@Override
 	public Void visitIntLiteral(IntLiteral i) {
-		// TODO Auto-generated method stub
+		writer.print("IntLiteral(" + i.value + ")");
 		return null;
 	}
 
 	@Override
 	public Void visitStructType(StructType st) {
-		// TODO Auto-generated method stub
+		writer.print("StructType(" + st.struct + ")");
 		return null;
 	}
 
 	@Override
 	public Void visitCharLiteral(CharLiteral c) {
-		// TODO Auto-generated method stub
+		writer.print("CharLiteral(" + c.value + ")");
 		return null;
 	}
 
 	@Override
 	public Void visitStringLiteral(StringLiteral i) {
-		// TODO Auto-generated method stub
+		writer.print("StringLiteral(" + i.value + ")");
 		return null;
 	}
 
 	@Override
 	public Void visitFunCallExpr(FunCallExpr f) {
-		// TODO Auto-generated method stub
+		writer.print("FunCallExpr(");
+		writer.print(f.name);
+		String delimiter = ",";
+        for (Expr expression : f.params) {
+            writer.print(delimiter);
+            expression.accept(this);
+        }
+        writer.print(")");
 		return null;
 	}
 
 	@Override
 	public Void visitBinOp(BinOp b) {
-		// TODO Auto-generated method stub
+		writer.print("BinOp(");
+		
+		//processes the left hand side and prints it
+		b.expression1.accept(this);
+		writer.print(",");
+		
+		//prints the operator
+		b.op.accept(this);
+		writer.print(",");
+		
+		//processes the right hand side and prints it
+		b.expression2.accept(this);
+		
+		writer.print(")");
 		return null;
 	}
 
 	@Override
 	public Void visitOp(Op o) {
-		// TODO Auto-generated method stub
+		writer.print(o.name());
 		return null;
 	}
 
 	@Override
 	public Void visitFieldAccessExpr(FieldAccessExpr f) {
-		// TODO Auto-generated method stub
+		writer.print("FieldAccessExpr(");
+		
+		//processes the structure and prints it
+		f.structure.accept(this);
+		
+		writer.print("," + f.field + ")");
 		return null;
 	}
 
 	@Override
 	public Void visitArrayAccessExpr(ArrayAccessExpr a) {
-		// TODO Auto-generated method stub
+		writer.print("ArrayAccessExpr(");
+		
+		//visits the array object and prints it
+		a.array.accept(this);
+		
+		writer.print(",");
+		
+		//visits the index expression and prints it
+		a.index.accept(this);
+		
+		writer.print(")");
 		return null;
 	}
 
 	@Override
 	public Void visitAddressOfExpr(AddressOfExpr a) {
-		// TODO Auto-generated method stub
+		writer.print("AddressOfExpr(");
+		
+		a.expression.accept(this);
+		
+		writer.print(")");
 		return null;
 	}
 
 	@Override
 	public Void visitValueAtExpr(ValueAtExpr a) {
-		// TODO Auto-generated method stub
+		writer.print("ValueAtExpr(");
+		
+		a.expression.accept(this);
+		
+		writer.print(")");
 		return null;
 	}
 
 	@Override
 	public Void visitSizeOfExpr(SizeOfExpr a) {
-		// TODO Auto-generated method stub
+		writer.print("SizeOfExpr(");
+		a.type.accept(this);
+		writer.print(")");
 		return null;
 	}
 
 	@Override
 	public Void visitTypecastExpr(TypecastExpr a) {
-		// TODO Auto-generated method stub
+		writer.print("TypecastExpr(");
+		a.type.accept(this);
+		writer.print(",");
+		a.expression.accept(this);
+		writer.print(")");
 		return null;
 	}
 
 	@Override
 	public Void visitWhile(While w) {
-		// TODO Auto-generated method stub
+		writer.print("While(");
+		w.expression.accept(this);
+		writer.print(",");
+		w.statement.accept(this);
+		writer.print(")");
 		return null;
 	}
 
 	@Override
 	public Void visitIf(If i) {
-		// TODO Auto-generated method stub
+		writer.print("If(");
+		i.expression.accept(this);
+		writer.print(",");
+		i.statement1.accept(this);
+		if(i.statement2!=null) {
+			writer.print(",");
+			i.statement2.accept(this);
+		}
+		writer.print(")");
 		return null;
 	}
 
 	@Override
 	public Void visitAssign(Assign a) {
-		// TODO Auto-generated method stub
+		writer.print("Assign(");
+		a.expression1.accept(this);
+		writer.print(",");
+		a.expression2.accept(this);
+		writer.print(")");
 		return null;
 	}
 
 	@Override
 	public Void visitReturn(Return r) {
-		// TODO Auto-generated method stub
+		writer.print("Return(");
+		
+		//prints returning expression if present
+		if(r.expression!=null) {
+			r.expression.accept(this);
+		}
+		writer.print(")");
 		return null;
 	}
 
 	@Override
 	public Void visitExprStmt(ExprStmt st) {
-		// TODO Auto-generated method stub
+		writer.print("ExprStmt(");
+		st.expression.accept(this);
+		writer.print(")");
 		return null;
 	}
 
 	@Override
 	public Void visitPointerType(PointerType p) {
-		// TODO Auto-generated method stub
+		
+		writer.print("PointerType(");
+		p.type.accept(this);
+		writer.print(")");
 		return null;
 	}
 
 	@Override
 	public Void visitArrayType(ArrayType a) {
-		// TODO Auto-generated method stub
+		writer.print("ArrayType(");
+		
+		//visits the type of array and prints it
+		a.type.accept(this);
+		//prints the array size
+		writer.print("," + a.num);
+		
+		writer.print(")");
 		return null;
 	}
 
