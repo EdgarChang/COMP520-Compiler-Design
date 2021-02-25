@@ -185,6 +185,10 @@ public class Parser {
         	expect(TokenClass.IDENTIFIER);
         	expect(TokenClass.LBRA);
         	params = parseVarDecls();
+        	if (params.isEmpty()) {
+        		expect(TokenClass.INT,TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT);
+        		expect(TokenClass.IDENTIFIER);
+        	}
         	expect(TokenClass.RBRA);
         	expect(TokenClass.SC);
         	stds.add(new StructTypeDecl(new StructType(structname),params));    	

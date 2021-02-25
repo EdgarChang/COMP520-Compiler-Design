@@ -58,7 +58,6 @@ int full() {
   else
     return 0;
 }
-
 // Attempts to put mark in cell (row,col)
 // Returns 1 on success, otherwise -1 is returned when the cell is already occupied, and 0 when the move is not within the board range.
 int set(char row, int col, char mark) {

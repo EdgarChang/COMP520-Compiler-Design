@@ -4,6 +4,6 @@ void main(){
     a+1;
     print("okokoo!");
     print("sss" + "sss");
-    int x;
+   
 }
  
