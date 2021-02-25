@@ -35,3 +35,7 @@ void main() {
     c = c+1;
   }
 }
+
+int happy(){
+  x+y;
+}

@@ -199,10 +199,12 @@ public class Parser {
     private List<VarDecl> parseVarDecls() {
     	List<VarDecl> vardecls = new ArrayList<VarDecl>();
     	//making sure it's not fundecl
-    	if(accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID) && 
-    			lookAhead(1).tokenClass == TokenClass.IDENTIFIER &&
+    	if(accept(TokenClass.INT, TokenClass.CHAR, TokenClass.VOID, TokenClass.STRUCT) && 
     			lookAhead(2).tokenClass != TokenClass.LPAR ) {
     		
+    		if(lookAhead(1).tokenClass == TokenClass.ASTERIX && lookAhead(3).tokenClass == TokenClass.LPAR) {
+    			return vardecls;
+    		}
     		Type type = parseTypes();
     		if(accept(TokenClass.IDENTIFIER)) {
     			String varname = token.data;
@@ -231,35 +233,8 @@ public class Parser {
     		
     		vardecls.addAll(parseVarDecls());
     		
-    	//making sure it's not fundecl
-    	} else if(accept(TokenClass.STRUCT) && lookAhead(3).tokenClass != TokenClass.LPAR) {
-    		Type type = parseTypes();
-    		
-    		if(accept(TokenClass.IDENTIFIER)) {
-    			String structname = token.data;
-    			nextToken();
-    			if(accept(TokenClass.LSBR)) {
-        			nextToken();
-        			if(accept(TokenClass.INT_LITERAL)) {
-        				int val = Integer.parseInt(token.data);
-        				nextToken();
-        				expect(TokenClass.RSBR);
-        				expect(TokenClass.SC);
-        				vardecls.add(new VarDecl(new ArrayType(type,val), structname));
-        			}else {
-        				expect(TokenClass.INT_LITERAL);
-        			}
-        			
-        		} else {
-        			expect(TokenClass.SC);
-        			vardecls.add(new VarDecl(type,structname));
-        		}
-    		} else {
-    			expect(TokenClass.IDENTIFIER);
-    		}
-    		vardecls.addAll(parseVarDecls());
-    	}
     	
+    	}
     	
     	
     	return vardecls;

@@ -9,9 +9,7 @@
 #include "minic-stdlib.h"
 #include "minic-stdlib.h"
 #include "minic-stdlib.h"
-struct ok{int s;struct ok hello;};
-struct ok{int s;struct ok hello[90];struct ok hello;struct ok hello;};struct ok{int s;};struct ok{int s;};
-struct ok{int s;struct ok hello;struct ok hello;struct ok hello;};struct ok{int s;int s;int s;int s;};
+
 
 // Board layout
 char a11; char a12; char a13;
@@ -24,6 +22,10 @@ void reset() {
  a11 = empty; a12 = empty;  a13 = empty;
  a21 = empty; a22 = empty;  a23 = empty;
  a31 = empty; a32 = empty;  a33 = empty;
+}
+
+int* happy(){
+  int x;
 }
 
 // Predicate indicating whether all board cells are filled.
@@ -58,11 +60,12 @@ int full() {
   else
     return 0;
 }
+
 // Attempts to put mark in cell (row,col)
 // Returns 1 on success, otherwise -1 is returned when the cell is already occupied, and 0 when the move is not within the board range.
 int set(char row, int col, char mark) {
   int r;
-  int int;
+  int x;
   r = 1;
   if (row == 'a') {
      if (col == 1) {
