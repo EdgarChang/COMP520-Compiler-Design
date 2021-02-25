@@ -63,6 +63,7 @@ int full() {
 // Returns 1 on success, otherwise -1 is returned when the cell is already occupied, and 0 when the move is not within the board range.
 int set(char row, int col, char mark) {
   int r;
+  int int;
   r = 1;
   if (row == 'a') {
      if (col == 1) {

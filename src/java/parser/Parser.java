@@ -549,6 +549,9 @@ public class Parser {
     	
   
     	else {
+    		if(accept(TokenClass.EOF)) {
+    			return null;
+    		}
     		expect(TokenClass.LPAR);
     		Expr expression = parseExpressions();
 			expect(TokenClass.RPAR);
