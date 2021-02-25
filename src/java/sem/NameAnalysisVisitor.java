@@ -47,11 +47,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 		return null;
 	}
 
-	@Override
-	public Void visitIntLiteral(IntLiteral i) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	@Override
 	public Void visitCharLiteral(CharLiteral c) {
@@ -163,6 +159,12 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
 	@Override
 	public Void visitArrayType(ArrayType a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitIntLiteral(IntLiteral i) {
 		// TODO Auto-generated method stub
 		return null;
 	}
