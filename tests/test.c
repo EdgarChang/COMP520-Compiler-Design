@@ -1,9 +1,22 @@
 struct ok{int s;};
+
 int x;
-int y;
-void main(){
-    int x;
-    read_i();
+int y;int santa(){
+    
 }
+
+int main(){
+    int* x;
+    int y[6];
+    struct ok sex;
+    *x;
+    &x;
+    read_i();
+    (*x) +1 = 3;
+    return;
+    return;
+    santa();
+}
+
 
  

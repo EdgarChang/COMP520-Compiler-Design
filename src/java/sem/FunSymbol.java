@@ -10,6 +10,10 @@ public class FunSymbol extends Symbol {
 		super(fd.name);
 		this.fd = fd;
 	}
+	public FunSymbol(FunDecl fd, String name) {
+		super(name);
+		this.fd = fd;
+	}
 	@Override
 	public boolean isFun() {
 		return true;

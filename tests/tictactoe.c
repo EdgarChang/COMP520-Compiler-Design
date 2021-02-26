@@ -24,9 +24,6 @@ void reset() {
  a31 = empty; a32 = empty;  a33 = empty;
 }
 
-int* happy(){
-  int x;
-}
 
 // Predicate indicating whether all board cells are filled.
 // 1 => true

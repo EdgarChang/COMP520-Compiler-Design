@@ -1,12 +1,15 @@
 package sem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ast.*;
 
 public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 	Scope scope;
+	
 	
 	public NameAnalysisVisitor(Scope scope){
 		this.scope=scope;
@@ -20,47 +23,30 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
 	@Override
 	public Void visitStructTypeDecl(StructTypeDecl sts) {
+		Symbol s = this.scope.lookupCurrent("struct "+ sts.type.struct);
+		if(s!=null) {
+			error("Struct already declared");
+		}else {
+			this.scope.put(new VarSymbol(new VarDecl(sts.type, "struct "+sts.type.struct)));
+		}
 		Scope old = scope;
 		scope = new Scope(old);
 		for(VarDecl vd : sts.params) {
+			
 			visitVarDecl(vd);
 		}
 		scope=old;
+		
+		
 		return null;
 	}
 	public void visitExpr(Expr e) {
-		if(e.getClass()==FunCallExpr.class) {
-			visitFunCallExpr((FunCallExpr)e);
-		}else if (e.getClass() == VarExpr.class) {
-			visitVarExpr((VarExpr) e);
-		}else if (e.getClass() == BinOp.class) {
-			visitBinOp((BinOp) e);
-		}else if (e.getClass() == AddressOfExpr.class) {
-			visitAddressOfExpr((AddressOfExpr) e);
-		}else if (e.getClass() == ArrayAccessExpr.class) {
-			visitArrayAccessExpr((ArrayAccessExpr) e);
-		}else if (e.getClass() == FieldAccessExpr.class) {
-			visitFieldAccessExpr((FieldAccessExpr) e);
-		}else if (e.getClass() == TypecastExpr.class ) {
-			visitTypecastExpr((TypecastExpr) e);
-		}else if (e.getClass() == ValueAtExpr.class) {
-			visitValueAtExpr((ValueAtExpr) e);
-		}
+
+		e.accept(this);
 	}
 	public void visitStmt(Stmt s) {
-		if(s.getClass() == While.class) {
-			visitWhile((While) s);
-		}else if (s.getClass() == If.class) {
-			visitIf((If) s);
-		}else if (s.getClass() == Assign.class) {
-			visitAssign((Assign) s);
-		}else if (s.getClass() == Return.class) {
-			visitReturn((Return) s);
-		}else if (s.getClass() == Block.class) {
-			visitBlock((Block) s);
-		}else if (s.getClass() == ExprStmt.class){
-			visitExprStmt((ExprStmt) s);
-		}
+
+		s.accept(this);
 	}
 
 	@Override
@@ -72,7 +58,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 			visitVarDecl(vd);
 		}
 		for(Stmt s: b.stmts) {
-			visitStmt(s);
+			s.accept(this);
 		}
 		scope = old;
 		return null;
@@ -116,7 +102,8 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 	    p.funDecls.add(0, new FunDecl(new PointerType(BaseType.VOID),"mcmalloc",param4,block));
 	    p.funDecls.add(0, new FunDecl(BaseType.CHAR,"read_c",vardecls,block));
 	    p.funDecls.add(0, new FunDecl(BaseType.INT,"read_i",vardecls,block));
-		for(StructTypeDecl sd : p.structTypeDecls) {
+		
+	    for(StructTypeDecl sd : p.structTypeDecls) {
 			visitStructTypeDecl(sd);
 		}
 		
@@ -135,7 +122,15 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 		Symbol s = this.scope.lookupCurrent(vd.varName);
 		if(s!=null) {
 			error("Variable already declared");
-		}else {
+		} else if (vd.type.getClass()==StructType.class) {
+			Symbol a = this.scope.lookup("struct "+((StructType)vd.type).struct);
+			if(a==null) {
+				error("Struct not declared yet");
+			}else {
+				this.scope.put(new VarSymbol(vd));
+			}
+			
+		} else {	
 			this.scope.put(new VarSymbol(vd));
 		}
 		return null;
@@ -149,6 +144,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 		}else {
 			v.vd = ((VarSymbol)s).vd;
 		}
+		
 		return null;
 	}
 
@@ -180,6 +176,10 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 		}else {
 			f.fd = ((FunSymbol)s).fd;
 		}
+		for(Expr e : f.params) {
+			e.accept(this);
+		}
+		
 		return null;
 	}
 
@@ -198,26 +198,26 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
 	@Override
 	public Void visitFieldAccessExpr(FieldAccessExpr f) {
-		visitExpr(f.structure);
+		f.structure.accept(this);
 		return null;
 	}
 
 	@Override
 	public Void visitArrayAccessExpr(ArrayAccessExpr a) {
-		visitExpr(a.array);
-		visitExpr(a.index);
+		a.array.accept(this);
+		a.index.accept(this);
 		return null;
 	}
 
 	@Override
 	public Void visitAddressOfExpr(AddressOfExpr a) {
-		visitExpr(a.expression);
+		a.expression.accept(this);
 		return null;
 	}
 
 	@Override
 	public Void visitValueAtExpr(ValueAtExpr a) {
-		visitExpr(a.expression);
+		a.expression.accept(this);
 		return null;
 	}
 
@@ -242,7 +242,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
 	@Override
 	public Void visitIf(If i) {
-		visitExpr(i.expression);
+		i.expression.accept(this);
 		visitStmt(i.statement1);
 		if(i.statement2!=null) {
 			visitStmt(i.statement2);
@@ -252,15 +252,15 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
 	@Override
 	public Void visitAssign(Assign a) {
-		visitExpr(a.expression1);
-		visitExpr(a.expression2);
+		a.expression1.accept(this);
+		a.expression2.accept(this);
 		return null;
 	}
 
 	@Override
 	public Void visitReturn(Return r) {
 		if(r.expression!=null) {
-			visitExpr(r.expression);
+			r.expression.accept(this);
 		}
 		return null;
 	}

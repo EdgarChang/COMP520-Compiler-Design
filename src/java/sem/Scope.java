@@ -27,6 +27,8 @@ public class Scope {
 		
 	}
 	
+	
+	
 	public Symbol lookupCurrent(String name) {
 		return this.symbolTable.get(name);
 	}

@@ -9,6 +9,7 @@ public class SemanticAnalyzer {
 		Scope scope = new Scope();
 		ArrayList<SemanticVisitor> visitors = new ArrayList<SemanticVisitor>() {{
 			add(new NameAnalysisVisitor(scope));
+			add(new TypeCheckVisitor());
 			// To be completed...
 		}};
 		// Error accumulator
