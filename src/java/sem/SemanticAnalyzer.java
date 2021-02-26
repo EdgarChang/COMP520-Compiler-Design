@@ -6,8 +6,9 @@ public class SemanticAnalyzer {
 	
 	public int analyze(ast.Program prog) {
 		// List of visitors
+		Scope scope = new Scope();
 		ArrayList<SemanticVisitor> visitors = new ArrayList<SemanticVisitor>() {{
-			add(new NameAnalysisVisitor());
+			add(new NameAnalysisVisitor(scope));
 			// To be completed...
 		}};
 		// Error accumulator

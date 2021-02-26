@@ -1,10 +1,9 @@
 struct ok{int s;};
-int* main(){
-    if(a>1){}
-    a+1;
-    print("okokoo!");
-    print("sss" + "sss");
-   
+int x;
+int y;
+void main(){
+    int x;
+    read_i();
 }
 
  

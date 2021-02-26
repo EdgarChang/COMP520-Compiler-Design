@@ -9,5 +9,9 @@ public class VarSymbol extends Symbol {
 		super(vd.varName);
 		this.vd = vd;
 	}
-
+	
+	@Override
+	public boolean isVar() {
+		return true;
+	}
 }

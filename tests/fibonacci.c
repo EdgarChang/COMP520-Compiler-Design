@@ -1,5 +1,5 @@
 #include "minic-stdlib.h"
-
+int n;
 void main() {
   int n;
   int first;
@@ -7,7 +7,7 @@ void main() {
   int next;
   int c;
   char t;
-  abcd;
+  
   // read n from the standard input
   
   n = read_i();
@@ -37,5 +37,5 @@ void main() {
 }
 
 int happy(){
-  x+y;
+ n+1;
 }

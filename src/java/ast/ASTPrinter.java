@@ -1,6 +1,8 @@
 package ast;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ASTPrinter implements ASTVisitor<Void> {
 
@@ -63,6 +65,7 @@ public class ASTPrinter implements ASTVisitor<Void> {
         }
         writer.print(")");
 	    writer.flush();
+	    
         return null;
     }
 
