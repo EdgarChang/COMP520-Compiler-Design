@@ -55,7 +55,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 		scope = new Scope(old);
 		
 		for(VarDecl vd : b.varDecls) {
-			visitVarDecl(vd);
+			vd.accept(this);
 		}
 		for(Stmt s: b.stmts) {
 			s.accept(this);
@@ -76,7 +76,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 		for(VarDecl vd : p.params) {
 			p.block.varDecls.add(0, vd);
 		}
-		visitBlock(p.block);
+		p.block.accept(this);
 		
 		
 		return null;
@@ -185,8 +185,8 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
 	@Override
 	public Void visitBinOp(BinOp b) {
-		visitExpr(b.expression1);
-		visitExpr(b.expression2);
+		b.expression1.accept(this);
+		b.expression2.accept(this);
 		return null;
 	}
 
@@ -229,23 +229,23 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
 	@Override
 	public Void visitTypecastExpr(TypecastExpr a) {
-		visitExpr(a.expression);
+		a.expression.accept(this);
 		return null;
 	}
 
 	@Override
 	public Void visitWhile(While w) {
-		visitExpr(w.expression);
-		visitStmt(w.statement);
+		w.expression.accept(this);
+		w.statement.accept(this);
 		return null;
 	}
 
 	@Override
 	public Void visitIf(If i) {
 		i.expression.accept(this);
-		visitStmt(i.statement1);
+		i.statement1.accept(this);
 		if(i.statement2!=null) {
-			visitStmt(i.statement2);
+			i.statement2.accept(this);
 		}
 		return null;
 	}
@@ -267,7 +267,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 
 	@Override
 	public Void visitExprStmt(ExprStmt st) {
-		visitExpr(st.expression);
+		st.expression.accept(this);
 		return null;
 	}
 

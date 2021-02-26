@@ -32,6 +32,7 @@ int main() {
     print_i(next);
     print_s((char*)" ");
     c = c+1;
+    
   }
   return 1;
 }

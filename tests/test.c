@@ -5,16 +5,20 @@ int y;int santa(){
     
 }
 
-int main(){
+void main(){
     int* x;
     int y[6];
     struct ok sex;
     *x;
     &x;
     read_i();
-    (*x) +1 = 3;
+    (*x) +1 ;
     return;
     return;
+    +x;
+    while(1<1){
+
+    }
     santa();
 }
 
