@@ -100,8 +100,8 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 	    p.funDecls.add(0, new FunDecl(BaseType.VOID,"print_i",param2,block));
 	    p.funDecls.add(0, new FunDecl(BaseType.VOID,"print_c",param3,block));
 	    p.funDecls.add(0, new FunDecl(new PointerType(BaseType.VOID),"mcmalloc",param4,block));
-	    p.funDecls.add(0, new FunDecl(BaseType.CHAR,"read_c",vardecls,block));
-	    p.funDecls.add(0, new FunDecl(BaseType.INT,"read_i",vardecls,block));
+	    p.funDecls.add(0, new FunDecl(BaseType.CHAR,"read_c",new ArrayList<VarDecl>(),block));
+	    p.funDecls.add(0, new FunDecl(BaseType.INT,"read_i",new ArrayList<VarDecl>(),block));
 		
 	    for(StructTypeDecl sd : p.structTypeDecls) {
 			visitStructTypeDecl(sd);

@@ -28,6 +28,9 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 	@Override
 	public Type visitBlock(Block b) {
 
+		for(VarDecl vd : b.varDecls) {
+			vd.accept(this);
+		}
 		for(Stmt s: b.stmts) {
 			s.accept(this);
 		}
@@ -111,10 +114,24 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 	@Override
 	public Type visitFunCallExpr(FunCallExpr f) {
 		
+		if(this.funParams.get(f.name)==null) {
+			error("Function not declared");
+			return null;
+		}else if(f.params!=null) {
+			if(this.funParams.get(f.name).size()!=f.params.size()) {
+				error("Input length doesn't match");
+				return null;
+			}
+		}
 		for(Expr vd : f.params) {
 			int i = f.params.indexOf(vd);
 			Type e = vd.accept(this);
-			if(this.funParams.get(f.name).get(i)!=null) {
+			if(e==null) {
+				error("Param not declared");
+				return null;
+			}
+			
+			if(this.funParams.get(f.name).size()>i) {
 				if(e.getClass()!=this.funParams.get(f.name).get(i).type.getClass()) {
 				error("Wrong function input");
 				return null;
@@ -124,9 +141,15 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 				return null;
 			}
 			
+			
+		}
+		if(f.fd==null) {
+			error("This is not a function");
+			return null;
+		}else {
+			return f.fd.type;
 		}
 		
-		return f.fd.type;
 	}
 
 	@Override
@@ -191,6 +214,11 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 	@Override
 	public Type visitAddressOfExpr(AddressOfExpr a) {
 		Type e = a.expression.accept(this);
+		if(a.expression.getClass()!=VarExpr.class && a.expression.getClass()!=FieldAccessExpr.class
+				&& a.expression.getClass()!= ArrayAccessExpr.class && a.expression.getClass()!=ValueAtExpr.class ) {
+			error("Invalid lvalues");
+			return null;
+		}
 		return new PointerType(e);
 	}
 
@@ -258,13 +286,18 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 		Type e1 = a.expression1.accept(this);
 		Type e2 = a.expression2.accept(this);
 		
+		if(e1==BaseType.VOID||e1.getClass()==ArrayType.class) {
+			error("No assignment for void and array type");
+			
+		}
 		if(e1 != e2) {
 			error("Incompatible assignment");
+			
 		}
-		
 		if(a.expression1.getClass()!=VarExpr.class && a.expression1.getClass()!=FieldAccessExpr.class
 				&& a.expression1.getClass()!= ArrayAccessExpr.class && a.expression1.getClass()!=ValueAtExpr.class ) {
 			error("Invalid lvalues");
+			
 		}
 		return null;
 	}

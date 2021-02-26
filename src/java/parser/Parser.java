@@ -267,7 +267,10 @@ public class Parser {
     			type = token.data;
     		}
     		expect(TokenClass.IDENTIFIER);
-    			
+    		if(accept(TokenClass.ASTERIX)) {
+            	nextToken();
+            	return new PointerType(new StructType(type));
+            }
     		return new StructType(type);
     	} else if(accept(TokenClass.INT)){
     		nextToken();
