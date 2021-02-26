@@ -75,8 +75,15 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 
 	@Override
 	public Type visitVarExpr(VarExpr v) {
-		v.type = v.vd.type;
-		return v.vd.type;
+		if(v.vd!=null) {
+			v.type = v.vd.type;
+			return v.vd.type;
+		}else {
+			error("No variable declaration");
+			return null;
+		}
+		
+		
 	}
 
 	@Override

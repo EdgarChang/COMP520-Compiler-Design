@@ -17,8 +17,10 @@ void main(){
     return;
     +x;
     while(1<1){
+        int s;
 
     }
+    s = s+1;
     santa();
 }
 
