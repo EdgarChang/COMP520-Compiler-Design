@@ -197,11 +197,16 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 	@Override
 	public Type visitValueAtExpr(ValueAtExpr a) {
 		Type e = a.expression.accept(this);
-		if(e.getClass()==PointerType.class) {
-			return ((PointerType)e).type;
+		if(e!=null) {
+			if(e.getClass()==PointerType.class) {
+				return ((PointerType)e).type;
+			}else {
+				error("Only accept value at PointerType");
+			}
 		}else {
-			error("Only accept value at PointerType");
+			error("Something wrong at valueAt");
 		}
+		
 		return null;
 	}
 

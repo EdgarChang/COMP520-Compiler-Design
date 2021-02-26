@@ -12,7 +12,7 @@ void main(){
     *x;
     &x;
     read_i();
-    (*x) +1 ;
+    (*x +1 );
     return;
     return;
     +x;
@@ -20,7 +20,7 @@ void main(){
         int s;
 
     }
-    s = s+1;
+    
     santa();
 }
 
