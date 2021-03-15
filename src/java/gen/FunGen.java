@@ -2,6 +2,7 @@ package gen;
 
 import ast.*;
 import gen.asm.AssemblyProgram;
+import gen.asm.AssemblyProgram.Section;
 
 /**
  * A visitor that produces code for a function declaration
@@ -9,6 +10,7 @@ import gen.asm.AssemblyProgram;
 public class FunGen implements ASTVisitor<Void> {
 
     private AssemblyProgram asmProg;
+    private Section section;
 
     public FunGen(AssemblyProgram asmProg) {
         this.asmProg = asmProg;
@@ -27,6 +29,9 @@ public class FunGen implements ASTVisitor<Void> {
     @Override
     public Void visitBlock(Block b) {
         // TODO: to complete
+    	for(Stmt statement: b.stmts) {
+    		statement.accept(this);
+    	}
         return null;
     }
 
@@ -35,11 +40,13 @@ public class FunGen implements ASTVisitor<Void> {
 
         // Each function should be produced in its own section.
         // This is is necessary for the register allocator.
-        asmProg.newSection(AssemblyProgram.Section.Type.TEXT);
-
+        this.section = asmProg.newSection(AssemblyProgram.Section.Type.TEXT);
+        this.section.emit(p.label);
+        
         // TODO: to complete:
         // 1) emit the prolog
         // 2) emit the body of the function
+        p.block.accept(this);
         // 3) emit the epilog
 
         return null;
@@ -61,6 +68,128 @@ public class FunGen implements ASTVisitor<Void> {
         // expression should be visited with the ExprGen when they appear in a statement (e.g. If, While, Assign ...)
         throw new ShouldNotReach();
     }
+
+	@Override
+	public Void visitIntLiteral(IntLiteral i) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitCharLiteral(CharLiteral c) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitStringLiteral(StringLiteral i) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitStructType(StructType st) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitFunCallExpr(FunCallExpr f) {
+		// TODO Auto-generated method stub
+		
+		return null;
+	}
+
+	@Override
+	public Void visitBinOp(BinOp b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitOp(Op o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitFieldAccessExpr(FieldAccessExpr f) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitArrayAccessExpr(ArrayAccessExpr a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitAddressOfExpr(AddressOfExpr a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitValueAtExpr(ValueAtExpr a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitSizeOfExpr(SizeOfExpr a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitTypecastExpr(TypecastExpr a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitWhile(While w) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitIf(If i) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitAssign(Assign a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitReturn(Return r) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitExprStmt(ExprStmt st) {
+		// TODO Auto-generated method stub
+		new ExprGen(asmProg, this.section).visitExprStmt(st);
+		return null;
+	}
+
+	@Override
+	public Void visitPointerType(PointerType p) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Void visitArrayType(ArrayType a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
     // TODO: to complete (should only deal with statements, expressions should be handled by the ExprGen or AddrGen)
 }

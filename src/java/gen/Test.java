@@ -11,12 +11,15 @@ import java.io.PrintWriter;
 public class Test {
     public static void main(String[] args) {
         AssemblyProgram prog = new AssemblyProgram();
-
+       
         AssemblyProgram.Section text = prog.newSection(AssemblyProgram.Section.Type.TEXT);
         Register v1 = new Register.Virtual();
         Register v2 = new Register.Virtual();
         Register v3 = new Register.Virtual();
+        AssemblyItem.Label label = new AssemblyItem.Label("hola");
+        text.emit(label);
         text.emit(AssemblyItem.Instruction.pushRegisters);
+        
         text.emit("addi", v1, Register.Arch.zero, 4);
         text.emit("addi", v2, Register.Arch.zero, 8);
         text.emit("add", v3, v1, v2);
@@ -25,6 +28,8 @@ public class Test {
         try {
             PrintWriter writer = new PrintWriter("t1.asm");
             prog.print(writer);
+            int c = 'A';
+            System.out.print(c);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

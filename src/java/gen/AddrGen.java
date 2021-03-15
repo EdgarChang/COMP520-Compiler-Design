@@ -52,6 +52,126 @@ public class AddrGen implements ASTVisitor<Register> {
         return null;
     }
 
+	@Override
+	public Register visitIntLiteral(IntLiteral i) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitCharLiteral(CharLiteral c) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitStringLiteral(StringLiteral i) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitStructType(StructType st) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitFunCallExpr(FunCallExpr f) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitBinOp(BinOp b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitOp(Op o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitFieldAccessExpr(FieldAccessExpr f) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitArrayAccessExpr(ArrayAccessExpr a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitAddressOfExpr(AddressOfExpr a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitValueAtExpr(ValueAtExpr a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitSizeOfExpr(SizeOfExpr a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitTypecastExpr(TypecastExpr a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitWhile(While w) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitIf(If i) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitAssign(Assign a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitReturn(Return r) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitExprStmt(ExprStmt st) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitPointerType(PointerType p) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Register visitArrayType(ArrayType a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
     // TODO: to complete (only deal with Expression nodes, anything else should throw ShouldNotReach)
 
 }

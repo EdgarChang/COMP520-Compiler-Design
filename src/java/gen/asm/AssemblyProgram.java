@@ -52,6 +52,16 @@ public class AssemblyProgram {
             assert this.type == Type.TEXT;
             items.add(new AssemblyItem.Instruction.Store(opcode, val, addr, imm));
         }
+        
+        public void emit(String opcode, Register src1, Register src2) {
+        	assert this.type == Type.TEXT;
+        	items.add(new AssemblyItem.Instruction.MInstruction(opcode, src1, src2));
+        }
+        
+        public void emit(String opcode, Register dst) {
+        	assert this.type == Type.TEXT;
+        	items.add(new AssemblyItem.Instruction.LoInstruction(opcode, dst));
+        }
 
 
         public void emit(AssemblyItem.Label label){

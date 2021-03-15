@@ -1,8 +1,11 @@
 package ast;
 
+import gen.asm.AssemblyItem;
+
 public class VarDecl implements ASTNode {
     public final Type type;
     public final String varName;
+    public AssemblyItem.Label label;
 
     public VarDecl(Type type, String varName) {
 	    this.type = type;

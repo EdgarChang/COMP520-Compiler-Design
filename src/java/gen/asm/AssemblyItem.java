@@ -46,6 +46,18 @@ public abstract class AssemblyItem {
                 return super.toString()+" "+size;
             }
         }
+        
+        static public class Asciiz extends Directive {
+            private final String string;
+            public Asciiz(String string) {
+                super("asciiz");
+                this.string = string;
+            }
+            public String toString() {
+                return super.toString()+" \""+string + "\n\"";
+            }
+        }
+        
     }
 
     public abstract static class Instruction extends AssemblyItem {
@@ -318,6 +330,65 @@ public abstract class AssemblyItem {
 
             public LA rebuild(Map<Register,Register> regMap) {
                 return new LA(regMap.getOrDefault(dst,dst),label);
+            }
+        }
+        
+        public static class MInstruction extends Instruction {
+        	public final Register src1;
+            public final Register src2;
+
+          
+
+            public MInstruction(String opcode, Register src1, Register src2) {
+                super(opcode);
+                this.src1 = src1;
+                this.src2 = src2;
+            }
+
+            public String toString() {
+            	return opcode+" " + src1 + "," + src2;
+            }
+
+
+            public Register def() {
+                return null;
+            }
+
+
+            public List<Register> uses() {
+                Register[] uses = {src1,src2};
+                return Arrays.asList(uses);
+            }
+
+            public MInstruction rebuild(Map<Register,Register> regMap) {
+                return new MInstruction(opcode,regMap.getOrDefault(src1,src1),regMap.getOrDefault(src2,src2));
+            }
+        }
+        public static class LoInstruction extends Instruction {
+        	public final Register dst;
+        
+            public LoInstruction(String opcode, Register dst) {
+                super(opcode);
+                this.dst = dst;
+            }
+
+            public String toString() {
+            	return opcode+" " + dst;
+            }
+
+
+            public Register def() {
+                return dst;
+            }
+
+
+            public List<Register> uses() {
+                Register[] uses = {};
+                return Arrays.asList(uses);
+            }
+
+            public LoInstruction rebuild(Map<Register,Register> regMap) {
+                return new LoInstruction(opcode,regMap.getOrDefault(dst,dst));
             }
         }
 

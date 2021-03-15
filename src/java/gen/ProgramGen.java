@@ -1,6 +1,7 @@
 package gen;
 
 import ast.*;
+import gen.asm.AssemblyItem;
 import gen.asm.AssemblyProgram;
 
 /**
@@ -39,6 +40,8 @@ public class ProgramGen implements ASTVisitor<Void> {
     @Override
     public Void visitFunDecl(FunDecl fd) {
         // call the visitor specialized for handling function declaration
+    	AssemblyItem.Label label = new AssemblyItem.Label(fd.name);
+    	fd.label = label;
         return new FunGen(asmProg).visitFunDecl(fd);
     }
 
@@ -52,6 +55,9 @@ public class ProgramGen implements ASTVisitor<Void> {
     @Override
     public Void visitVarDecl(VarDecl vd) {
         // TODO: to complete: declare the variable globally in the data section and remember its label somewhere (e.g. in the VarDecl AST node directly).
+    	AssemblyItem.Label label = new AssemblyItem.Label(vd.varName);
+    	vd.label = label;
+    	this.dataSection.emit(label);
         return null;
     }
 
@@ -59,6 +65,106 @@ public class ProgramGen implements ASTVisitor<Void> {
     public Void visitVarExpr(VarExpr v) {
         throw new ShouldNotReach();
     }
+
+	@Override
+	public Void visitIntLiteral(IntLiteral i) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitCharLiteral(CharLiteral c) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitStringLiteral(StringLiteral i) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitStructType(StructType st) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitFunCallExpr(FunCallExpr f) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitBinOp(BinOp b) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitOp(Op o) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitFieldAccessExpr(FieldAccessExpr f) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitArrayAccessExpr(ArrayAccessExpr a) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitAddressOfExpr(AddressOfExpr a) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitValueAtExpr(ValueAtExpr a) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitSizeOfExpr(SizeOfExpr a) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitTypecastExpr(TypecastExpr a) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitWhile(While w) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitIf(If i) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitAssign(Assign a) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitReturn(Return r) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitExprStmt(ExprStmt st) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitPointerType(PointerType p) {
+		throw new ShouldNotReach();
+	}
+
+	@Override
+	public Void visitArrayType(ArrayType a) {
+		throw new ShouldNotReach();
+	}
 
     // TODO: to complete (all the other visit methods should throw SholdNotReach)
 
