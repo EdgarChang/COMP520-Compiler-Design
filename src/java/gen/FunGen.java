@@ -1,8 +1,10 @@
 package gen;
 
 import ast.*;
+import gen.asm.AssemblyItem;
 import gen.asm.AssemblyProgram;
 import gen.asm.AssemblyProgram.Section;
+import gen.asm.Register;
 
 /**
  * A visitor that produces code for a function declaration
@@ -42,7 +44,12 @@ public class FunGen implements ASTVisitor<Void> {
         // This is is necessary for the register allocator.
         this.section = asmProg.newSection(AssemblyProgram.Section.Type.TEXT);
         this.section.emit(p.label);
-        
+        if(p.name == "print_i") {
+        	this.section.emit("addi", Register.Arch.v0, Register.Arch.zero, 1);
+        	this.section.emit("add", Register.Arch.a0, Register.Arch.t0, 5);
+        	this.section.emit(new AssemblyItem.Instruction.Syscall());
+        	
+        }
         // TODO: to complete:
         // 1) emit the prolog
         // 2) emit the body of the function

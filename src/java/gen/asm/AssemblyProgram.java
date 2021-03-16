@@ -63,7 +63,10 @@ public class AssemblyProgram {
         	items.add(new AssemblyItem.Instruction.LoInstruction(opcode, dst));
         }
 
-
+        public void emit(AssemblyItem.Instruction.Syscall syscall){
+            items.add(syscall);
+        }
+        
         public void emit(AssemblyItem.Label label){
             items.add(label);
         }

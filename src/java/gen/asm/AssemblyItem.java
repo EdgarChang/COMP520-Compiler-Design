@@ -391,6 +391,31 @@ public abstract class AssemblyItem {
                 return new LoInstruction(opcode,regMap.getOrDefault(dst,dst));
             }
         }
+        public static class Syscall extends Instruction {
+        	
+            public Syscall() {
+                super("syscall");
+            }
+
+            public String toString() {
+            	return "syscall";
+            }
+
+
+            public Register def() {
+                return null;
+            }
+
+
+            public List<Register> uses() {
+                Register[] uses = {};
+                return Arrays.asList(uses);
+            }
+
+            public Syscall rebuild(Map<Register,Register> regMap) {
+                return new Syscall();
+            }
+        }
 
 
        // TODO: to complete

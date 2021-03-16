@@ -100,9 +100,10 @@ public class ExprGen implements ASTVisitor<Register> {
 	@Override
 	public Register visitBinOp(BinOp b) {
 		// TODO Auto-generated method stub
-		Register lhsReg =b.expression1.accept(this);
+		Register lhsReg = b.expression1.accept(this);
 		Register rhsReg = b.expression2.accept(this);
 		Register resReg = new Register.Virtual();
+		Register v1 = new Register.Virtual();
 		
 		switch(b.op) {
 			case ADD:
@@ -118,6 +119,20 @@ public class ExprGen implements ASTVisitor<Register> {
 			case DIV:
 				this.section.emit("div", lhsReg, rhsReg);
 				this.section.emit("mflo", resReg);
+				break;
+			case MOD:
+				this.section.emit("div", lhsReg, rhsReg);
+				this.section.emit("mfhi", resReg);
+				break;
+			case GT:
+				this.section.emit("slt", resReg, rhsReg, lhsReg);
+				break;
+			case LT:
+				this.section.emit("slt", resReg, lhsReg, rhsReg);
+				break;
+			case GE:
+				this.section.emit("slt", v1, lhsReg, rhsReg);
+				this.section.emit("xori", resReg, v1, 1);
 				break;
 		}
 		return null;

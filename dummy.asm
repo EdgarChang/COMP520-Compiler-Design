@@ -29,6 +29,12 @@ label_3_print_c:
 
 .text
 label_4_print_i:
+# Original instruction: addi $v0,$zero,1
+addi $v0,$zero,1
+# Original instruction: add $a0,$t0,5
+add $a0,$t0,5
+# Original instruction: syscall
+syscall
 
 .data
 # Allocated labels for virtual registers
