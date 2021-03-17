@@ -68,7 +68,7 @@ public class ExprGen implements ASTVisitor<Register> {
 	public Register visitIntLiteral(IntLiteral i) {
 		Register resReg = new Register.Virtual();
 		
-		this.section.emit("li", resReg,Register.Arch.zero, i.value);
+		this.section.emit("addi", resReg,Register.Arch.zero, i.value);
 		
 		return resReg;
 	}
@@ -77,7 +77,7 @@ public class ExprGen implements ASTVisitor<Register> {
 	public Register visitCharLiteral(CharLiteral c) {
 		Register resReg = new Register.Virtual();
 		
-		this.section.emit("li", resReg, Register.Arch.zero, c.value);
+		this.section.emit("addi", resReg, Register.Arch.zero, c.value);
 		
 		return resReg;
 	}
@@ -219,7 +219,8 @@ public class ExprGen implements ASTVisitor<Register> {
 	@Override
 	public Register visitAssign(Assign a) {
 		// TODO Auto-generated method stub
-		return null;
+		Register data = a.expression2.accept(this);
+		return data;
 	}
 
 	@Override

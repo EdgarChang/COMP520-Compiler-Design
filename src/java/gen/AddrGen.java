@@ -3,6 +3,7 @@ package gen;
 import ast.*;
 import gen.asm.AssemblyProgram;
 import gen.asm.Register;
+import gen.asm.AssemblyProgram.Section;
 
 /**
  * Generates code to calculate the address of an expression and return the result in a register.
@@ -11,9 +12,11 @@ public class AddrGen implements ASTVisitor<Register> {
 
 
     private AssemblyProgram asmProg;
+    private Section section;
 
-    public AddrGen(AssemblyProgram asmProg) {
+    public AddrGen(AssemblyProgram asmProg, AssemblyProgram.Section section) {
         this.asmProg = asmProg;
+        this.section = section;
     }
 
     @Override
@@ -49,7 +52,13 @@ public class AddrGen implements ASTVisitor<Register> {
     @Override
     public Register visitVarExpr(VarExpr v) {
         // TODO: to complete
-        return null;
+    	Register resReg = new Register.Virtual();
+    	if(v.vd.offset!=0) {
+    		this.section.emit("addi", resReg, Register.Arch.fp,v.vd.offset);
+    	} else {
+    		this.section.emitLA(resReg,v.vd.label);
+    	}
+        return resReg;
     }
 
 	@Override
@@ -145,7 +154,8 @@ public class AddrGen implements ASTVisitor<Register> {
 	@Override
 	public Register visitAssign(Assign a) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		return a.expression1.accept(this);
 	}
 
 	@Override

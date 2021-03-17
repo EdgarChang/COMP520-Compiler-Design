@@ -183,6 +183,12 @@ public class FunGen implements ASTVisitor<Void> {
 	@Override
 	public Void visitAssign(Assign a) {
 		// TODO Auto-generated method stub
+		
+		Register dst = new AddrGen(asmProg, this.section).visitAssign(a);
+		Register data = new ExprGen(asmProg, this.section).visitAssign(a);
+		
+		this.section.emitStore("sw",data, dst,0);
+
 		return null;
 	}
 
