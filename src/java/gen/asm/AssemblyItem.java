@@ -391,6 +391,64 @@ public abstract class AssemblyItem {
                 return new LoInstruction(opcode,regMap.getOrDefault(dst,dst));
             }
         }
+        public static class LoadLabelInstruction extends Instruction {
+            public final Label label;
+            public final Register dst;
+
+            public LoadLabelInstruction(Register dst, Label label) {
+                super("lw");
+                this.label = label;
+                this.dst = dst;
+            }
+
+            public String toString() {
+                return "lw "+ dst + "," + label;
+            }
+
+
+            public Register def() {
+                return dst;
+            }
+
+
+            public List<Register> uses() {
+                Register[] uses = {};
+                return Arrays.asList(uses);
+            }
+
+            public LoadLabelInstruction rebuild(Map<Register,Register> regMap) {
+                return new LoadLabelInstruction(regMap.getOrDefault(dst,dst),label);
+            }
+        }
+        public static class StoreLabelInstruction extends Instruction {
+            public final Label label;
+            public final Register src;
+
+            public StoreLabelInstruction(Register src, Label label) {
+                super("sw");
+                this.label = label;
+                this.src = src;
+            }
+
+            public String toString() {
+                return "sw "+ src + "," + label;
+            }
+
+
+            public Register def() {
+                return null;
+            }
+
+
+            public List<Register> uses() {
+                Register[] uses = {src};
+                return Arrays.asList(uses);
+            }
+
+            public StoreLabelInstruction rebuild(Map<Register,Register> regMap) {
+                return new StoreLabelInstruction(regMap.getOrDefault(src,src),label);
+            }
+        }
         public static class Syscall extends Instruction {
         	
             public Syscall() {

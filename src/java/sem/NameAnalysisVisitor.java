@@ -53,7 +53,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 	public Void visitBlock(Block b) {
 		Scope old = scope;
 		scope = new Scope(old);
-		
+		//System.out.println(b.varDecls.size());
 		for(VarDecl vd : b.varDecls) {
 			vd.accept(this);
 		}
@@ -78,6 +78,11 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 		}
 		p.block.accept(this);
 		
+		for(VarDecl vd : p.params) {
+			p.block.varDecls.remove(0);
+		}
+		//System.out.println(p.block.varDecls.size());
+		
 		
 		return null;
 	}
@@ -95,7 +100,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 	    List<VarDecl> param3 = new ArrayList<VarDecl>();
 	    param3.add(new VarDecl(BaseType.CHAR,"c"));
 	    List<VarDecl> param4 = new ArrayList<VarDecl>();
-	    param4.add(new VarDecl(BaseType.INT,"size"));
+	    param4.add(new VarDecl(BaseType.INT,"size"));	    
 	    p.funDecls.add(0, new FunDecl(BaseType.VOID,"print_s",param1,block));
 	    p.funDecls.add(0, new FunDecl(BaseType.VOID,"print_i",param2,block));
 	    p.funDecls.add(0, new FunDecl(BaseType.VOID,"print_c",param3,block));

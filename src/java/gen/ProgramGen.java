@@ -58,6 +58,9 @@ public class ProgramGen implements ASTVisitor<Void> {
     	AssemblyItem.Label label = new AssemblyItem.Label(vd.varName);
     	vd.label = label;
     	this.dataSection.emit(label);
+    	
+    	this.dataSection.emit(new AssemblyItem.Directive.Space(4));
+    	
         return null;
     }
 

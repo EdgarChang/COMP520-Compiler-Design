@@ -54,7 +54,12 @@ public class ExprGen implements ASTVisitor<Register> {
     @Override
     public Register visitVarExpr(VarExpr v) {
     	Register resReg = new Register.Virtual();
-		this.section.emit("lw", resReg, Register.Arch.zero, v.vd.label);
+    	if(v.vd.offset != 0) {
+    		this.section.emitLoad("lw", resReg, Register.Arch.fp, v.vd.offset);
+    	}else {
+    		this.section.emitLoadLabel(resReg, v.vd.label);
+    	}
+		
 		
         return resReg;
     }
@@ -134,8 +139,27 @@ public class ExprGen implements ASTVisitor<Register> {
 				this.section.emit("slt", v1, lhsReg, rhsReg);
 				this.section.emit("xori", resReg, v1, 1);
 				break;
+			case LE:
+				this.section.emit("slt", v1, rhsReg, lhsReg);
+				this.section.emit("xori", resReg, v1, 1);
+				break;
+			case EQ:
+				this.section.emit("xor", v1, lhsReg, rhsReg);
+				this.section.emit("sltiu", resReg, v1, 1);
+				break;
+			case NE:
+				this.section.emit("xor", v1, lhsReg, rhsReg);
+				this.section.emit("sltu", resReg, Register.Arch.zero, v1);
+				break;
+			case AND:
+				this.section.emit("and", resReg, lhsReg, rhsReg);
+				break;
+			case OR:
+				this.section.emit("or", resReg, lhsReg, rhsReg);
+				break;
+			
 		}
-		return null;
+		return resReg;
 	}
 
 	@Override

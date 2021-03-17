@@ -31,6 +31,12 @@ public class FunGen implements ASTVisitor<Void> {
     @Override
     public Void visitBlock(Block b) {
         // TODO: to complete
+    	if(b.varDecls!=null) {
+        	for(int i = 0; i < b.varDecls.size(); i++) {
+        		b.varDecls.get(i).offset = -4*(i+1);
+        	}
+        	this.section.emit("addi", Register.Arch.sp, Register.Arch.zero, b.varDecls.size()*-4);
+        }
     	for(Stmt statement: b.stmts) {
     		statement.accept(this);
     	}
@@ -50,6 +56,12 @@ public class FunGen implements ASTVisitor<Void> {
         	this.section.emit(new AssemblyItem.Instruction.Syscall());
         	
         }
+        if(p.params!=null) {
+        	for(int i = 0; i < p.params.size(); i++) {
+        		p.params.get(i).offset = 4*(p.params.size() - i);
+        	}
+        }
+        
         // TODO: to complete:
         // 1) emit the prolog
         // 2) emit the body of the function
@@ -67,7 +79,8 @@ public class FunGen implements ASTVisitor<Void> {
     @Override
     public Void visitVarDecl(VarDecl vd) {
         // TODO: should allocate local variables on the stack and remember the offset from the frame pointer where they are stored (e.g. in the VarDecl AST node)
-        return null;
+        
+    	return null;
     }
 
     @Override
