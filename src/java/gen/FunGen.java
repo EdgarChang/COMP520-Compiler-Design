@@ -5,6 +5,7 @@ import gen.asm.AssemblyItem;
 import gen.asm.AssemblyProgram;
 import gen.asm.AssemblyProgram.Section;
 import gen.asm.Register;
+import gen.asm.AssemblyItem.Label;
 
 /**
  * A visitor that produces code for a function declaration
@@ -181,7 +182,17 @@ public class FunGen implements ASTVisitor<Void> {
 
 	@Override
 	public Void visitIf(If i) {
-		// TODO Auto-generated method stub
+		Register cond = i.expression.accept(new ExprGen(asmProg, this.section));
+		Label elseLbl = new AssemblyItem.Label("Else");
+		Label end = new AssemblyItem.Label("End");
+		this.section.emit("beq",cond,Register.Arch.zero,elseLbl);
+		i.statement1.accept(this);
+		this.section.emit("j",end);
+		this.section.emit(elseLbl);
+		if(i.statement2!=null) {
+			i.statement2.accept(this);
+		}
+		this.section.emit(end);
 		return null;
 	}
 

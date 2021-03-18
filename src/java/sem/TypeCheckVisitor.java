@@ -202,8 +202,10 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 		Type e2 = a.index.accept(this);
 		
 		if(e1.getClass()==ArrayType.class && e2 == BaseType.INT) {
+			a.type = ((ArrayType)e1).type;
 			return ((ArrayType)e1).type;
 		} else if(e1.getClass()==PointerType.class && e2 == BaseType.INT) {
+			a.type = ((PointerType)e1).type;
 			return ((PointerType)e1).type;
 		} else {
 			error("Invalid array access type");

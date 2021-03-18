@@ -106,7 +106,18 @@ public class AddrGen implements ASTVisitor<Register> {
 	@Override
 	public Register visitArrayAccessExpr(ArrayAccessExpr a) {
 		// TODO Auto-generated method stub
-		return null;
+		Register resReg = new Register.Virtual();
+		Register offset = new Register.Virtual();
+		Register array = a.array.accept(this) ;
+		Register index = a.index.accept(new ExprGen(asmProg, this.section));
+		if(a.type == BaseType.INT) {
+			this.section.emit("li", offset, 4);
+			this.section.emit("mult", index, offset);
+			this.section.emit("mflo", index);
+		}
+		this.section.emit("add",resReg,array,index);
+	
+		return resReg;
 	}
 
 	@Override

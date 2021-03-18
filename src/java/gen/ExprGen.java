@@ -250,10 +250,12 @@ public class ExprGen implements ASTVisitor<Register> {
 		Register offset = new Register.Virtual();
 		Register array = a.array.accept(new AddrGen(asmProg, this.section)) ;
 		Register index = a.index.accept(this);
-		this.section.emit("li", offset, -4);
-		this.section.emit("mult", index, offset);
-		this.section.emit("mflo", offset);
-		this.section.emit("add",array,array,offset);
+		if(a.type == BaseType.INT) {
+			this.section.emit("li", offset, 4);
+			this.section.emit("mult", index, offset);
+			this.section.emit("mflo", index);
+		}
+		this.section.emit("add",array,array,index);
 		this.section.emitLoad("lw",resReg,array,0);
 		
 		return resReg;

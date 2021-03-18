@@ -59,8 +59,16 @@ public class ProgramGen implements ASTVisitor<Void> {
     	vd.label = label;
     	this.dataSection.emit(label);
     	if(vd.type.getClass()==ArrayType.class) {
-    		int size = ((ArrayType)vd.type).num + 1;
-    		this.dataSection.emit(new AssemblyItem.Directive.Space(size));
+    		if(((ArrayType)vd.type).type==BaseType.INT) {
+    			int size = ((ArrayType)vd.type).num*4;
+    			this.dataSection.emit(new AssemblyItem.Directive.Space(size));
+    		}else {
+    			int size = ((ArrayType)vd.type).num;
+    			int mod = size%4;
+    			int paddedSize = size + (4-mod);
+    			this.dataSection.emit(new AssemblyItem.Directive.Space(paddedSize));
+    		}
+    		
     	}else {
     		this.dataSection.emit(new AssemblyItem.Directive.Space(4));
     	}
