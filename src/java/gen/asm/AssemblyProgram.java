@@ -62,6 +62,11 @@ public class AssemblyProgram {
         	items.add(new AssemblyItem.Instruction.MInstruction(opcode, src1, src2));
         }
         
+        public void emitMove(String opcode, Register src1, Register src2) {
+        	assert this.type == Type.TEXT;
+        	items.add(new AssemblyItem.Instruction.MoveInstruction(opcode, src1, src2));
+        }
+        
         public void emitLoadLabel(Register dst, AssemblyItem.Label label) {
         	assert this.type == Type.TEXT;
         	items.add(new AssemblyItem.Instruction.LoadLabelInstruction(dst, label));

@@ -54,7 +54,7 @@ public abstract class AssemblyItem {
                 this.string = string;
             }
             public String toString() {
-                return super.toString()+" \""+string + "\\n\"";
+                return super.toString()+" \""+string + "\"";
             }
         }
         
@@ -391,7 +391,37 @@ public abstract class AssemblyItem {
                 return new LA(regMap.getOrDefault(dst,dst),label);
             }
         }
-        
+        public static class MoveInstruction extends Instruction {
+        	public final Register src1;
+            public final Register src2;
+
+          
+
+            public MoveInstruction(String opcode, Register src1, Register src2) {
+                super(opcode);
+                this.src1 = src1;
+                this.src2 = src2;
+            }
+
+            public String toString() {
+            	return opcode+" " + src1 + "," + src2;
+            }
+
+
+            public Register def() {
+                return src1;
+            }
+
+
+            public List<Register> uses() {
+                Register[] uses = {src2};
+                return Arrays.asList(uses);
+            }
+
+            public MoveInstruction rebuild(Map<Register,Register> regMap) {
+                return new MoveInstruction(opcode,regMap.getOrDefault(src1,src1),regMap.getOrDefault(src2,src2));
+            }
+        }
         public static class MInstruction extends Instruction {
         	public final Register src1;
             public final Register src2;
@@ -552,6 +582,23 @@ public abstract class AssemblyItem {
 
         public String toString() {
             return "label_"+id+"_"+name;
+        }
+
+        public void accept(AssemblyItemVisitor v) {
+            v.visitLabel(this);
+        }
+
+    }
+    public static class MainLabel extends Label {
+
+        private final String name;
+        public MainLabel() {
+            this.name = "";
+        }
+      
+        @Override
+        public String toString() {
+            return ".globl main \n main";
         }
 
         public void accept(AssemblyItemVisitor v) {

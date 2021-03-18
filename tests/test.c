@@ -1,21 +1,18 @@
 
-int x;
-int y;
-int z [5];
-void main(char y){
-   int s;
-   s=1+1;
-   
-   print_i(s);
-   print_c('s');
-   z[2] = 3;
-   if(1>6){
-        print_i(z[2]);
-        print_s((char*)"hola");
-   }else{
 
+void main(){
+    int x;
+    char c;
+    x=3;
+    print_i(x);
+    x=read_i();
+    c= read_c();
+    print_i(x);
+    print_c(c);
 
-   }
-  
-   s = 1+1;
+    //    while(x<5 || 0){
+    //        print_i(5);
+    //        x=1+x;
+    //    }
+
 }

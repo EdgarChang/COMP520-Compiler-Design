@@ -50,6 +50,9 @@ public class FunGen implements ASTVisitor<Void> {
         // Each function should be produced in its own section.
         // This is is necessary for the register allocator.
         this.section = asmProg.newSection(AssemblyProgram.Section.Type.TEXT);
+        if(p.name.equals("main")) {
+        	this.section.emit(new AssemblyItem.MainLabel());
+        }
         this.section.emit(p.label);
         
         if(p.params!=null) {
@@ -62,7 +65,7 @@ public class FunGen implements ASTVisitor<Void> {
         // 1) emit the prolog
         this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, -4 );
         this.section.emitStore("sw", Register.Arch.fp, Register.Arch.sp, 0);
-        this.section.emit("move", Register.Arch.fp, Register.Arch.sp);
+        this.section.emitMove("move", Register.Arch.fp, Register.Arch.sp);
         this.section.emit(AssemblyItem.Instruction.pushRegisters);
         // 2) emit the body of the function
         p.block.accept(this);
@@ -177,6 +180,15 @@ public class FunGen implements ASTVisitor<Void> {
 	@Override
 	public Void visitWhile(While w) {
 		// TODO Auto-generated method stub
+		
+		Label end = new AssemblyItem.Label("End");
+		Label whileLbl = new AssemblyItem.Label("While");
+		this.section.emit(whileLbl);
+		Register cond = w.expression.accept(new ExprGen(asmProg, this.section));
+		this.section.emit("beq",cond,Register.Arch.zero,end);
+		w.statement.accept(this);
+		this.section.emit("j",whileLbl);
+		this.section.emit(end);
 		return null;
 	}
 

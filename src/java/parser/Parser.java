@@ -396,7 +396,7 @@ public class Parser {
     private Expr parseExpressions() {
     	Expr lhs = parseTerms();
     	while(accept(TokenClass.PLUS,TokenClass.MINUS,TokenClass.GT,TokenClass.LT,TokenClass.GE,TokenClass.LE,
-    			TokenClass.EQ,TokenClass.NE,TokenClass.LOGAND,TokenClass.LOGOR)) {
+    			TokenClass.EQ,TokenClass.NE)) {
     		Op op;
     		if(accept(TokenClass.PLUS)) {
     			op = Op.ADD;
@@ -419,17 +419,23 @@ public class Parser {
     		else if (accept(TokenClass.EQ)) {
     			op = Op.EQ;
     		}
-    		else if (accept(TokenClass.NE)) {
+    		else  {
     			op = Op.NE;
     		}
-    		else if (accept(TokenClass.LOGAND)) {
+    		
+    		nextToken();
+    		Expr rhs = parseTerms();
+    		lhs = new BinOp(lhs,op,rhs);
+    	}
+    	if(accept(TokenClass.LOGAND,TokenClass.LOGOR)) {
+    		Op op;
+    		if(accept(TokenClass.LOGAND)) {
     			op = Op.AND;
-    		}
-    		else {
+    		}else {
     			op = Op.OR;
     		}
     		nextToken();
-    		Expr rhs = parseTerms();
+    		Expr rhs = parseExpressions();
     		lhs = new BinOp(lhs,op,rhs);
     	}
     	return lhs;
@@ -588,7 +594,7 @@ public class Parser {
     		Expr rhs = parseFactors();
     		lhs = new BinOp(lhs,op,rhs);
     	}
-    	
+    
     	return lhs;
     }
     

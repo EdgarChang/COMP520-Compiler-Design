@@ -108,24 +108,39 @@ public class ExprGen implements ASTVisitor<Register> {
 		if(f.name.equals("print_i")) {
         	this.section.emit("li", Register.Arch.v0, 1);
         	Register arg = f.params.get(0).accept(this);
-        	this.section.emit("move", Register.Arch.a0, arg);
+        	this.section.emitMove("move", Register.Arch.a0, arg);
         	this.section.emit(new AssemblyItem.Instruction.Syscall());
         	
         }
 		if(f.name.equals("print_c")) {
         	this.section.emit("li", Register.Arch.v0, 11);
         	Register arg = f.params.get(0).accept(this);
-        	this.section.emit("move", Register.Arch.a0, arg);
+        	this.section.emitMove("move", Register.Arch.a0, arg);
         	this.section.emit(new AssemblyItem.Instruction.Syscall());
         	
         }
 		if(f.name.equals("print_s")) {
         	this.section.emit("li", Register.Arch.v0, 4);
         	Register arg = f.params.get(0).accept(this);
-        	this.section.emit("move", Register.Arch.a0, arg);
+        	this.section.emitMove("move", Register.Arch.a0, arg);
         	this.section.emit(new AssemblyItem.Instruction.Syscall());
         	
         }
+		if(f.name.equals("read_i")) {
+			Register resReg = new Register.Virtual();
+        	this.section.emit("li", Register.Arch.v0, 5);
+        	this.section.emit(new AssemblyItem.Instruction.Syscall());
+        	this.section.emitMove("move", resReg, Register.Arch.v0);
+        	return resReg;
+        }
+		if(f.name.equals("read_c")) {
+			Register resReg = new Register.Virtual();
+        	this.section.emit("li", Register.Arch.v0, 12);
+        	this.section.emit(new AssemblyItem.Instruction.Syscall());
+        	this.section.emitMove("move", resReg, Register.Arch.v0);
+        	return resReg;
+        }
+		
 		
 		return null;
 	}
