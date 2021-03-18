@@ -58,8 +58,12 @@ public class ProgramGen implements ASTVisitor<Void> {
     	AssemblyItem.Label label = new AssemblyItem.Label(vd.varName);
     	vd.label = label;
     	this.dataSection.emit(label);
+    	if(vd.type.getClass()==ArrayType.class) {
+    		this.dataSection.emit(new AssemblyItem.Directive.Space(8));
+    	}else {
+    		this.dataSection.emit(new AssemblyItem.Directive.Space(4));
+    	}
     	
-    	this.dataSection.emit(new AssemblyItem.Directive.Space(4));
     	
         return null;
     }

@@ -63,32 +63,27 @@ public class AddrGen implements ASTVisitor<Register> {
 
 	@Override
 	public Register visitIntLiteral(IntLiteral i) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new ShouldNotReach();
 	}
 
 	@Override
 	public Register visitCharLiteral(CharLiteral c) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new ShouldNotReach();
 	}
 
 	@Override
 	public Register visitStringLiteral(StringLiteral i) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new ShouldNotReach();
 	}
 
 	@Override
 	public Register visitStructType(StructType st) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new ShouldNotReach();
 	}
 
 	@Override
 	public Register visitFunCallExpr(FunCallExpr f) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new ShouldNotReach();
 	}
 
 	@Override
@@ -99,8 +94,7 @@ public class AddrGen implements ASTVisitor<Register> {
 
 	@Override
 	public Register visitOp(Op o) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new ShouldNotReach();
 	}
 
 	@Override
@@ -141,14 +135,12 @@ public class AddrGen implements ASTVisitor<Register> {
 
 	@Override
 	public Register visitWhile(While w) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new ShouldNotReach();
 	}
 
 	@Override
 	public Register visitIf(If i) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new ShouldNotReach();
 	}
 
 	@Override
@@ -160,26 +152,22 @@ public class AddrGen implements ASTVisitor<Register> {
 
 	@Override
 	public Register visitReturn(Return r) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new ShouldNotReach();
 	}
 
 	@Override
 	public Register visitExprStmt(ExprStmt st) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new ShouldNotReach();
 	}
 
 	@Override
 	public Register visitPointerType(PointerType p) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new ShouldNotReach();
 	}
 
 	@Override
 	public Register visitArrayType(ArrayType a) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new ShouldNotReach();
 	}
 
     // TODO: to complete (only deal with Expression nodes, anything else should throw ShouldNotReach)

@@ -37,6 +37,10 @@ public class AssemblyProgram {
             assert this.type == Type.TEXT;
             items.add(new AssemblyItem.Instruction.IInstruction(opcode, dst, src, imm));
         }
+        public void emit(String opcode, Register dst, int imm) {
+            assert this.type == Type.TEXT;
+            items.add(new AssemblyItem.Instruction.LiInstruction(opcode, dst, imm));
+        }
 
         public void emitLA(Register dst, AssemblyItem.Label label) {
             assert this.type == Type.TEXT;

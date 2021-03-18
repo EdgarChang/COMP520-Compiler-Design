@@ -54,7 +54,7 @@ public abstract class AssemblyItem {
                 this.string = string;
             }
             public String toString() {
-                return super.toString()+" \""+string + "\n\"";
+                return super.toString()+" \""+string + "\\n\"";
             }
         }
         
@@ -249,7 +249,36 @@ public abstract class AssemblyItem {
                 return new IInstruction(opcode, regMap.getOrDefault(dst, dst),regMap.getOrDefault(src, src), imm);
             }
         }
+        
+        public static class LiInstruction extends Instruction {
+            public final int imm;
+            public final Register dst;
+       
+            public LiInstruction(String opcode, Register dst, int imm) {
+                super(opcode);
+                this.imm = imm;
+                this.dst = dst;
+            }
 
+            public String toString() {
+                return opcode+" "+ dst + "," + imm;
+            }
+
+
+            public Register def() {
+                return dst;
+            }
+
+
+            public List<Register> uses() {
+                Register[] uses = {};
+                return Arrays.asList(uses);
+            }
+
+            public LiInstruction rebuild(Map<Register,Register> regMap) {
+                return new LiInstruction(opcode, regMap.getOrDefault(dst, dst), imm);
+            }
+        }
 
 
         public abstract static class MemIndirect extends Instruction {

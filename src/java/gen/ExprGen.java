@@ -6,6 +6,7 @@ import gen.asm.AssemblyItem.Label;
 import gen.asm.AssemblyProgram;
 import gen.asm.AssemblyProgram.Section;
 import gen.asm.Register;
+import gen.asm.Register.Virtual;
 
 
 /**
@@ -68,7 +69,7 @@ public class ExprGen implements ASTVisitor<Register> {
 	public Register visitIntLiteral(IntLiteral i) {
 		Register resReg = new Register.Virtual();
 		
-		this.section.emit("addi", resReg,Register.Arch.zero, i.value);
+		this.section.emit("li", resReg, i.value);
 		
 		return resReg;
 	}
@@ -77,7 +78,7 @@ public class ExprGen implements ASTVisitor<Register> {
 	public Register visitCharLiteral(CharLiteral c) {
 		Register resReg = new Register.Virtual();
 		
-		this.section.emit("addi", resReg, Register.Arch.zero, c.value);
+		this.section.emit("li", resReg, c.value);
 		
 		return resReg;
 	}
@@ -86,8 +87,12 @@ public class ExprGen implements ASTVisitor<Register> {
 	public Register visitStringLiteral(StringLiteral i) {
 		// TODO Auto-generated method stub
 		Register resReg = new Register.Virtual();
-		this.section.emit(new AssemblyItem.Directive.Asciiz(i.value));
-		return null;
+		Section str = asmProg.newSection(AssemblyProgram.Section.Type.DATA);
+		Label label = new AssemblyItem.Label("str");
+		str.emit(label);
+		str.emit(new AssemblyItem.Directive.Asciiz(i.value));
+		this.section.emitLA(resReg, label);
+		return resReg;
 	}
 
 	@Override
@@ -98,7 +103,30 @@ public class ExprGen implements ASTVisitor<Register> {
 
 	@Override
 	public Register visitFunCallExpr(FunCallExpr f) {
+		System.out.println(f.name);
 		// TODO Auto-generated method stub
+		if(f.name.equals("print_i")) {
+        	this.section.emit("li", Register.Arch.v0, 1);
+        	Register arg = f.params.get(0).accept(this);
+        	this.section.emit("move", Register.Arch.a0, arg);
+        	this.section.emit(new AssemblyItem.Instruction.Syscall());
+        	
+        }
+		if(f.name.equals("print_c")) {
+        	this.section.emit("li", Register.Arch.v0, 11);
+        	Register arg = f.params.get(0).accept(this);
+        	this.section.emit("move", Register.Arch.a0, arg);
+        	this.section.emit(new AssemblyItem.Instruction.Syscall());
+        	
+        }
+		if(f.name.equals("print_s")) {
+        	this.section.emit("li", Register.Arch.v0, 4);
+        	Register arg = f.params.get(0).accept(this);
+        	this.section.emit("move", Register.Arch.a0, arg);
+        	this.section.emit(new AssemblyItem.Instruction.Syscall());
+        	
+        }
+		
 		return null;
 	}
 
@@ -200,8 +228,13 @@ public class ExprGen implements ASTVisitor<Register> {
 
 	@Override
 	public Register visitTypecastExpr(TypecastExpr a) {
+		if(a.type == BaseType.INT) {
+			return a.expression.accept(this);
+		}else {
+			return a.expression.accept(this);
+		}
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public class FunGen implements ASTVisitor<Void> {
         	for(int i = 0; i < b.varDecls.size(); i++) {
         		b.varDecls.get(i).offset = -4*(i+1);
         	}
-        	this.section.emit("addi", Register.Arch.sp, Register.Arch.zero, b.varDecls.size()*-4);
+        	this.section.emit("addi", Register.Arch.sp,Register.Arch.sp, b.varDecls.size()*-4);
         }
     	for(Stmt statement: b.stmts) {
     		statement.accept(this);
@@ -50,23 +50,28 @@ public class FunGen implements ASTVisitor<Void> {
         // This is is necessary for the register allocator.
         this.section = asmProg.newSection(AssemblyProgram.Section.Type.TEXT);
         this.section.emit(p.label);
-        if(p.name == "print_i") {
-        	this.section.emit("addi", Register.Arch.v0, Register.Arch.zero, 1);
-        	this.section.emit("add", Register.Arch.a0, Register.Arch.t0, 5);
-        	this.section.emit(new AssemblyItem.Instruction.Syscall());
-        	
-        }
+        
         if(p.params!=null) {
         	for(int i = 0; i < p.params.size(); i++) {
-        		p.params.get(i).offset = 4*(p.params.size() - i);
+        		p.params.get(i).offset = 4*(p.params.size() - i)+8;
         	}
         }
         
         // TODO: to complete:
         // 1) emit the prolog
+        this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, -4 );
+        this.section.emitStore("sw", Register.Arch.fp, Register.Arch.sp, 0);
+        this.section.emit("move", Register.Arch.fp, Register.Arch.sp);
+        this.section.emit(AssemblyItem.Instruction.pushRegisters);
         // 2) emit the body of the function
         p.block.accept(this);
         // 3) emit the epilog
+        this.section.emit(AssemblyItem.Instruction.popRegisters);
+        this.section.emitLoad("lw",Register.Arch.fp,Register.Arch.fp,0);
+        if(p.name.equals("main")) {
+        	this.section.emit("li", Register.Arch.v0, 10);
+        	this.section.emit(new AssemblyItem.Instruction.Syscall());
+        }
 
         return null;
     }
@@ -195,6 +200,11 @@ public class FunGen implements ASTVisitor<Void> {
 	@Override
 	public Void visitReturn(Return r) {
 		// TODO Auto-generated method stub
+		if(r.expression!=null) {
+			Register value = r.expression.accept(new ExprGen(asmProg, this.section));
+			this.section.emitStore("sw", value, Register.Arch.fp,8);
+		}
+		
 		return null;
 	}
 
