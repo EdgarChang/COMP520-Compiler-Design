@@ -134,57 +134,98 @@ public class ExprGen implements ASTVisitor<Register> {
 	public Register visitBinOp(BinOp b) {
 		// TODO Auto-generated method stub
 		Register lhsReg = b.expression1.accept(this);
-		Register rhsReg = b.expression2.accept(this);
 		Register resReg = new Register.Virtual();
 		Register v1 = new Register.Virtual();
-		
+	
 		switch(b.op) {
-			case ADD:
+			case ADD:{
+				Register rhsReg = b.expression2.accept(this);
 				this.section.emit("add", resReg, lhsReg, rhsReg);
 				break;
-			case MUL:
+			}
+			case MUL:{
+				Register rhsReg = b.expression2.accept(this);
 				this.section.emit("mult", lhsReg, rhsReg);
 				this.section.emit("mflo", resReg);
 				break;
-			case SUB:
+			}
+			case SUB:{
+				Register rhsReg = b.expression2.accept(this);
 				this.section.emit("sub", resReg, lhsReg, rhsReg);
 				break;
-			case DIV:
+			}
+			case DIV:{
+				Register rhsReg = b.expression2.accept(this);
 				this.section.emit("div", lhsReg, rhsReg);
 				this.section.emit("mflo", resReg);
 				break;
-			case MOD:
+			}
+			case MOD:{
+				Register rhsReg = b.expression2.accept(this);
 				this.section.emit("div", lhsReg, rhsReg);
 				this.section.emit("mfhi", resReg);
 				break;
-			case GT:
+			}
+			case GT:{
+				Register rhsReg = b.expression2.accept(this);
 				this.section.emit("slt", resReg, rhsReg, lhsReg);
 				break;
-			case LT:
+			}
+			case LT:{
+				Register rhsReg = b.expression2.accept(this);
 				this.section.emit("slt", resReg, lhsReg, rhsReg);
 				break;
-			case GE:
+			}
+			case GE:{
+				Register rhsReg = b.expression2.accept(this);
 				this.section.emit("slt", v1, lhsReg, rhsReg);
 				this.section.emit("xori", resReg, v1, 1);
 				break;
-			case LE:
+			}
+			case LE:{
+				Register rhsReg = b.expression2.accept(this);
 				this.section.emit("slt", v1, rhsReg, lhsReg);
 				this.section.emit("xori", resReg, v1, 1);
 				break;
-			case EQ:
+			}
+			case EQ:{
+				Register rhsReg = b.expression2.accept(this);
 				this.section.emit("xor", v1, lhsReg, rhsReg);
 				this.section.emit("sltiu", resReg, v1, 1);
 				break;
-			case NE:
+			}
+			case NE:{
+				Register rhsReg = b.expression2.accept(this);
 				this.section.emit("xor", v1, lhsReg, rhsReg);
 				this.section.emit("sltu", resReg, Register.Arch.zero, v1);
 				break;
-			case AND:
-				this.section.emit("and", resReg, lhsReg, rhsReg);
+			}
+			case AND:{
+				Label fail = new AssemblyItem.Label("False");
+				Label end = new AssemblyItem.Label("End");
+				this.section.emit("beq", lhsReg, Register.Arch.zero, fail);
+				Register rhsReg = b.expression2.accept(this);
+				this.section.emit("beq", rhsReg, Register.Arch.zero, fail);
+				this.section.emit("li",resReg,1);
+				this.section.emit("j",end);
+				this.section.emit(fail);
+				this.section.emit("li", resReg, 0);
+				this.section.emit(end);
 				break;
-			case OR:
-				this.section.emit("or", resReg, lhsReg, rhsReg);
+			}
+			case OR:{
+				Label tru = new AssemblyItem.Label("True");
+				Label end = new AssemblyItem.Label("End");
+				this.section.emit("bne", lhsReg, Register.Arch.zero, tru);
+				Register rhsReg = b.expression2.accept(this);
+				this.section.emit("bne", rhsReg, Register.Arch.zero, tru);
+				this.section.emit("li",resReg,0);
+				this.section.emit("j",end);
+				this.section.emit(tru);
+				this.section.emit("li", resReg, 1);
+				this.section.emit(end);
 				break;
+			}
 			
 		}
 		return resReg;
@@ -205,7 +246,17 @@ public class ExprGen implements ASTVisitor<Register> {
 	@Override
 	public Register visitArrayAccessExpr(ArrayAccessExpr a) {
 		// TODO Auto-generated method stub
-		return null;
+		Register resReg = new Register.Virtual();
+		Register offset = new Register.Virtual();
+		Register array = a.array.accept(new AddrGen(asmProg, this.section)) ;
+		Register index = a.index.accept(this);
+		this.section.emit("li", offset, -4);
+		this.section.emit("mult", index, offset);
+		this.section.emit("mflo", offset);
+		this.section.emit("add",array,array,offset);
+		this.section.emitLoad("lw",resReg,array,0);
+		
+		return resReg;
 	}
 
 	@Override
@@ -233,7 +284,6 @@ public class ExprGen implements ASTVisitor<Register> {
 		}else {
 			return a.expression.accept(this);
 		}
-		// TODO Auto-generated method stub
 		
 	}
 

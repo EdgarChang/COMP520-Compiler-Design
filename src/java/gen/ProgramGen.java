@@ -59,7 +59,8 @@ public class ProgramGen implements ASTVisitor<Void> {
     	vd.label = label;
     	this.dataSection.emit(label);
     	if(vd.type.getClass()==ArrayType.class) {
-    		this.dataSection.emit(new AssemblyItem.Directive.Space(8));
+    		int size = ((ArrayType)vd.type).num + 1;
+    		this.dataSection.emit(new AssemblyItem.Directive.Space(size));
     	}else {
     		this.dataSection.emit(new AssemblyItem.Directive.Space(4));
     	}
@@ -172,6 +173,7 @@ public class ProgramGen implements ASTVisitor<Void> {
 	public Void visitArrayType(ArrayType a) {
 		throw new ShouldNotReach();
 	}
+	
 
     // TODO: to complete (all the other visit methods should throw SholdNotReach)
 

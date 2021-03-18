@@ -76,6 +76,10 @@ public class AssemblyProgram {
         	assert this.type == Type.TEXT;
         	items.add(new AssemblyItem.Instruction.LoInstruction(opcode, dst));
         }
+        public void emit(String opcode, AssemblyItem.Label label) {
+        	assert this.type == Type.TEXT;
+        	items.add(new AssemblyItem.Instruction.Jump(opcode, label));
+        }
 
         public void emit(AssemblyItem.Instruction.Syscall syscall){
             items.add(syscall);

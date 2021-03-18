@@ -217,6 +217,36 @@ public abstract class AssemblyItem {
             }
         }
 
+        public static class Jump extends Instruction {
+            public final Label label;
+         
+
+            public Jump(String opcode, Label label) {
+                super(opcode);
+                this.label = label;
+               
+            }
+
+            public String toString() {
+                return opcode+" "+ "," + label;
+            }
+
+
+            public Register def() {
+                return null;
+            }
+
+
+            public List<Register> uses() {
+                Register[] uses = {};
+                return Arrays.asList(uses);
+            }
+
+            public Jump rebuild(Map<Register,Register> regMap) {
+                return new Jump(opcode, label);
+            }
+        }
+
 
         public static class IInstruction extends Instruction {
             public final int imm;
