@@ -115,8 +115,6 @@ public class ExprGen implements ASTVisitor<Register> {
 
 	@Override
 	public Register visitFunCallExpr(FunCallExpr f) {
-		System.out.println(f.name);
-		// TODO Auto-generated method stub
 		if(f.name.equals("print_i")) {
         	this.section.emit("li", Register.Arch.v0, 1);
         	Register arg = f.params.get(0).accept(this);
