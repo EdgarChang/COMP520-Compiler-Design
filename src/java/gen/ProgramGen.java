@@ -42,7 +42,7 @@ public class ProgramGen implements ASTVisitor<Void> {
         // call the visitor specialized for handling function declaration
     	AssemblyItem.Label label = new AssemblyItem.Label(fd.name);
     	fd.label = label;
-        return new FunGen(asmProg).visitFunDecl(fd);
+        return new FunGen(asmProg, this.dataSection).visitFunDecl(fd);
     }
 
     @Override

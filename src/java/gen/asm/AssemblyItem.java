@@ -57,6 +57,16 @@ public abstract class AssemblyItem {
                 return super.toString()+" \""+string + "\"";
             }
         }
+        static public class Align extends Directive {
+            private final int size;
+            public Align(int size) {
+                super("align");
+                this.size = size;
+            }
+            public String toString() {
+                return super.toString()+ " " +size;
+            }
+        }
         
     }
 

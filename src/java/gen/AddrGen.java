@@ -13,10 +13,13 @@ public class AddrGen implements ASTVisitor<Register> {
 
     private AssemblyProgram asmProg;
     private Section section;
+    private Section dataSection;
+    
 
-    public AddrGen(AssemblyProgram asmProg, AssemblyProgram.Section section) {
+    public AddrGen(AssemblyProgram asmProg, AssemblyProgram.Section section, Section dataSection) {
         this.asmProg = asmProg;
         this.section = section;
+        this.dataSection = dataSection;
     }
 
     @Override
@@ -109,7 +112,7 @@ public class AddrGen implements ASTVisitor<Register> {
 		Register resReg = new Register.Virtual();
 		Register offset = new Register.Virtual();
 		Register array = a.array.accept(this) ;
-		Register index = a.index.accept(new ExprGen(asmProg, this.section));
+		Register index = a.index.accept(new ExprGen(asmProg, this.section, this.dataSection));
 		if(a.type == BaseType.INT) {
 			this.section.emit("li", offset, 4);
 			this.section.emit("mult", index, offset);

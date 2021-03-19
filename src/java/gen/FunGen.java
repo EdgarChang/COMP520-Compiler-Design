@@ -14,9 +14,11 @@ public class FunGen implements ASTVisitor<Void> {
 
     private AssemblyProgram asmProg;
     private Section section;
+    private Section dataSection;
 
-    public FunGen(AssemblyProgram asmProg) {
+    public FunGen(AssemblyProgram asmProg, Section dataSection) {
         this.asmProg = asmProg;
+        this.dataSection = dataSection;
     }
 
     @Override
@@ -225,7 +227,7 @@ public class FunGen implements ASTVisitor<Void> {
 		Label end = new AssemblyItem.Label("End");
 		Label whileLbl = new AssemblyItem.Label("While");
 		this.section.emit(whileLbl);
-		Register cond = w.expression.accept(new ExprGen(asmProg, this.section));
+		Register cond = w.expression.accept(new ExprGen(asmProg, this.section, this.dataSection));
 		this.section.emit("beq",cond,Register.Arch.zero,end);
 		w.statement.accept(this);
 		this.section.emit("j",whileLbl);
@@ -235,7 +237,7 @@ public class FunGen implements ASTVisitor<Void> {
 
 	@Override
 	public Void visitIf(If i) {
-		Register cond = i.expression.accept(new ExprGen(asmProg, this.section));
+		Register cond = i.expression.accept(new ExprGen(asmProg, this.section, this.dataSection));
 		Label elseLbl = new AssemblyItem.Label("Else");
 		Label end = new AssemblyItem.Label("End");
 		this.section.emit("beq",cond,Register.Arch.zero,elseLbl);
@@ -253,10 +255,15 @@ public class FunGen implements ASTVisitor<Void> {
 	public Void visitAssign(Assign a) {
 		// TODO Auto-generated method stub
 		
-		Register dst = new AddrGen(asmProg, this.section).visitAssign(a);
-		Register data = new ExprGen(asmProg, this.section).visitAssign(a);
+		Register dst = new AddrGen(asmProg, this.section, this.dataSection).visitAssign(a);
+		Register data = new ExprGen(asmProg, this.section, this.dataSection).visitAssign(a);
 		
-		this.section.emitStore("sw",data, dst,0);
+		if(a.expression2.type == BaseType.CHAR) {
+			this.section.emitStore("sb",data, dst,0);
+		}else {
+			this.section.emitStore("sw",data, dst,0);
+		}
+		
 
 		return null;
 	}
@@ -265,8 +272,17 @@ public class FunGen implements ASTVisitor<Void> {
 	public Void visitReturn(Return r) {
 		// TODO Auto-generated method stub
 		if(r.expression!=null) {
-			Register value = r.expression.accept(new ExprGen(asmProg, this.section));
-			this.section.emitStore("sw", value, Register.Arch.fp,8);
+			System.out.print(r.expression.type);
+			if(r.expression.type==BaseType.CHAR) {
+				Register value = r.expression.accept(new ExprGen(asmProg, this.section, this.dataSection));
+				this.section.emitStore("sb", value, Register.Arch.fp,8);
+				
+			}else {
+				System.out.print(r.expression.type + "hello");
+				Register value = r.expression.accept(new ExprGen(asmProg, this.section, this.dataSection));
+				this.section.emitStore("sw", value, Register.Arch.fp,8);
+			}
+			
 		}
 		
 		return null;
@@ -275,7 +291,7 @@ public class FunGen implements ASTVisitor<Void> {
 	@Override
 	public Void visitExprStmt(ExprStmt st) {
 		// TODO Auto-generated method stub
-		new ExprGen(asmProg, this.section).visitExprStmt(st);
+		new ExprGen(asmProg, this.section, this.dataSection).visitExprStmt(st);
 		return null;
 	}
 

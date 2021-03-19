@@ -16,10 +16,12 @@ public class ExprGen implements ASTVisitor<Register> {
 
     private AssemblyProgram asmProg;
     private Section section;
+    private Section dataSection;
     
-    public ExprGen(AssemblyProgram asmProg, Section section) {
+    public ExprGen(AssemblyProgram asmProg, Section section, Section dataSection) {
         this.asmProg = asmProg;
         this.section = section;
+        this.dataSection = dataSection;
     }
 
     @Override
@@ -100,6 +102,7 @@ public class ExprGen implements ASTVisitor<Register> {
 		Label label = new AssemblyItem.Label("str");
 		str.emit(label);
 		str.emit(new AssemblyItem.Directive.Asciiz(i.value));
+		str.emit(new AssemblyItem.Directive.Align(2));
 		this.section.emitLA(resReg, label);
 		return resReg;
 	}
@@ -119,6 +122,7 @@ public class ExprGen implements ASTVisitor<Register> {
         	Register arg = f.params.get(0).accept(this);
         	this.section.emitMove("move", Register.Arch.a0, arg);
         	this.section.emit(new AssemblyItem.Instruction.Syscall());
+        	return arg;
         	
         }
 		if(f.name.equals("print_c")) {
@@ -126,6 +130,7 @@ public class ExprGen implements ASTVisitor<Register> {
         	Register arg = f.params.get(0).accept(this);
         	this.section.emitMove("move", Register.Arch.a0, arg);
         	this.section.emit(new AssemblyItem.Instruction.Syscall());
+        	return arg;
         	
         }
 		if(f.name.equals("print_s")) {
@@ -133,6 +138,7 @@ public class ExprGen implements ASTVisitor<Register> {
         	Register arg = f.params.get(0).accept(this);
         	this.section.emitMove("move", Register.Arch.a0, arg);
         	this.section.emit(new AssemblyItem.Instruction.Syscall());
+        	return arg;
         	
         }
 		if(f.name.equals("read_i")) {
@@ -296,7 +302,7 @@ public class ExprGen implements ASTVisitor<Register> {
 		// TODO Auto-generated method stub
 		Register resReg = new Register.Virtual();
 		Register offset = new Register.Virtual();
-		Register array = a.array.accept(new AddrGen(asmProg, this.section)) ;
+		Register array = a.array.accept(new AddrGen(asmProg, this.section, this.dataSection)) ;
 		Register index = a.index.accept(this);
 		if(a.type == BaseType.INT) {
 			this.section.emit("li", offset, 4);

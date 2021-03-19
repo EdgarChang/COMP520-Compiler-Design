@@ -2,15 +2,6 @@
 // Written by Daniel Hillerström
 
 #include "minic-stdlib.h"
-
-#include "minic-stdlib.h"
-
-#include "minic-stdlib.h"
-#include "minic-stdlib.h"
-#include "minic-stdlib.h"
-#include "minic-stdlib.h"
-
-
 // Board layout
 char a11; char a12; char a13;
 char a21; char a22; char a23;
@@ -23,7 +14,6 @@ void reset() {
  a21 = empty; a22 = empty;  a23 = empty;
  a31 = empty; a32 = empty;  a33 = empty;
 }
-
 
 // Predicate indicating whether all board cells are filled.
 // 1 => true
@@ -62,7 +52,6 @@ int full() {
 // Returns 1 on success, otherwise -1 is returned when the cell is already occupied, and 0 when the move is not within the board range.
 int set(char row, int col, char mark) {
   int r;
-  int x;
   r = 1;
   if (row == 'a') {
      if (col == 1) {
@@ -269,7 +258,7 @@ void main() {
 
   empty = ' ';
   playing = 1;
-  // reset();
+  reset();
   printGame();
   player = 1; // Begin with player one
   while (playing) {

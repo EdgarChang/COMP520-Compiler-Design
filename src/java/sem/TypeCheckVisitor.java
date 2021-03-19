@@ -147,6 +147,7 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 			error("This is not a function");
 			return null;
 		}else {
+			f.type = f.fd.type;
 			return f.fd.type;
 		}
 		
@@ -160,12 +161,14 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 		if(b.op==Op.NE||b.op==Op.EQ) {
 			if(lhs!=BaseType.VOID && lhs.getClass()!=StructType.class &&lhs.getClass()!=ArrayType.class
 					&& lhs.getClass()==rhs.getClass()) {
+				b.type =BaseType.INT;
 				return BaseType.INT;
 			}else {
 				error("Wrong type in BinOp");
 			}
 		}else {
 			if(lhs==BaseType.INT && rhs==BaseType.INT) {
+				b.type = BaseType.INT;
 				return BaseType.INT;
 			}else {
 				error("Wrong type in BinOp");
@@ -187,7 +190,10 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 			
 			List<VarDecl> fields = this.structFields.get(((StructType)e).struct);
 			for(VarDecl v:fields) {
-				if(v.varName == f.field) return v.type;
+				if(v.varName == f.field) {
+					f.type = v.type;
+					return v.type;
+				}
 			}
 			error("No matching field found");
 		} else {
@@ -221,6 +227,7 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 			error("Invalid lvalues");
 			return null;
 		}
+		a.type = new PointerType(e);
 		return new PointerType(e);
 	}
 
@@ -229,6 +236,7 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 		Type e = a.expression.accept(this);
 		if(e!=null) {
 			if(e.getClass()==PointerType.class) {
+				a.type = ((PointerType)e).type;
 				return ((PointerType)e).type;
 			}else {
 				error("Only accept value at PointerType");
@@ -311,13 +319,16 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 		if(r.expression!=null) {
 			e=r.expression.accept(this);
 		}
+	
 		FunDecl fd = ((FunSymbol)scope.lookupCurrent("Function")).fd;
+		
 		if(fd == null) {
 			error("Misplaced return");
 		}else if(fd.type==BaseType.VOID && e==null) {
 			return null;
 		}else if(fd.type == e) {
-			return null;
+			r.expression.type=e;
+			return e;
 		}else {
 			error("Wrong return type");
 		}
