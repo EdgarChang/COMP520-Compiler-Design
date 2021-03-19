@@ -509,6 +509,35 @@ public abstract class AssemblyItem {
                 return new LoadLabelInstruction(regMap.getOrDefault(dst,dst),label);
             }
         }
+        public static class LoadCLabelInstruction extends Instruction {
+            public final Label label;
+            public final Register dst;
+
+            public LoadCLabelInstruction(Register dst, Label label) {
+                super("lb");
+                this.label = label;
+                this.dst = dst;
+            }
+
+            public String toString() {
+                return "lb "+ dst + "," + label;
+            }
+
+
+            public Register def() {
+                return dst;
+            }
+
+
+            public List<Register> uses() {
+                Register[] uses = {};
+                return Arrays.asList(uses);
+            }
+
+            public LoadCLabelInstruction rebuild(Map<Register,Register> regMap) {
+                return new LoadCLabelInstruction(regMap.getOrDefault(dst,dst),label);
+            }
+        }
         public static class StoreLabelInstruction extends Instruction {
             public final Label label;
             public final Register src;

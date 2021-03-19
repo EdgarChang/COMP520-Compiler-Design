@@ -8,8 +8,9 @@ void main() {
   int c;
   char t;
 
+  print_s((char*)"Enter the number of fib you want: ");
   // read n from the standard input
-  t = read_c();
+  n = read_i();
   
   first = 0;
   second = 1;

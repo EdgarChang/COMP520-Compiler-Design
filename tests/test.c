@@ -1,18 +1,43 @@
+int n;
+  int i;
+  int flag ;
 
 
-void main(){
-    int x;
-    char c;
-    x=3;
-    print_i(x);
-    x=read_i();
-    c= read_c();
-    print_i(x);
-    print_c(c);
+void checkPrime(){
+    n = read_i();
+    i = 2;
+    while(i<=n/2){
+        if (n % i == 0) {
+            print_i(i);
+            flag = 1;
+            i=n+1;
+        }
+     
+        i = i+1;
+    }
+//   for (i = 2; i <= n / 2; ++i) {
+//     // condition for non-prime
+//     if (n % i == 0) {
+//       flag = 1;
+//       break;
+//     }
+//   }
 
-    //    while(x<5 || 0){
-    //        print_i(5);
-    //        x=1+x;
-    //    }
+  if (n == 1) {
+    print_s((char*)"1 is neither prime nor composite.");
+  } 
+  else {
+    if (flag == 0)
+       print_s((char*)"N is a prime number.");
+    else
+      print_s((char*)"N is not a prime number.");
+  }
+}
+
+void main() {
+  
+  print_s((char*)"Enter a positive integer: ");
+    checkPrime();
+    
 
 }

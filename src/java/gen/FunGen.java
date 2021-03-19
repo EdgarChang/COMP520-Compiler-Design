@@ -38,8 +38,14 @@ public class FunGen implements ASTVisitor<Void> {
         	}
         	this.section.emit("addi", Register.Arch.sp,Register.Arch.sp, b.varDecls.size()*-4);
         }
+        this.section.emit(AssemblyItem.Instruction.pushRegisters);
+
     	for(Stmt statement: b.stmts) {
     		statement.accept(this);
+    	}
+        this.section.emit(AssemblyItem.Instruction.popRegisters);
+    	if(b.varDecls!=null) {
+    		this.section.emit("addi", Register.Arch.sp,Register.Arch.sp, b.varDecls.size()*4);
     	}
         return null;
     }
@@ -66,16 +72,51 @@ public class FunGen implements ASTVisitor<Void> {
         this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, -4 );
         this.section.emitStore("sw", Register.Arch.fp, Register.Arch.sp, 0);
         this.section.emitMove("move", Register.Arch.fp, Register.Arch.sp);
-        this.section.emit(AssemblyItem.Instruction.pushRegisters);
+//        if(p.name.equals("print_i")) {
+//        	this.section.emit("li", Register.Arch.v0, 1);
+//        	
+//        	this.section.emitLoad("lw", Register.Arch.a0,  Register.Arch.fp,12);
+//        	this.section.emit(new AssemblyItem.Instruction.Syscall());
+//        	
+//        }
+//		if(p.name.equals("print_c")) {
+//        	this.section.emit("li", Register.Arch.v0, 11);
+//        	this.section.emitLoad("lw", Register.Arch.a0,  Register.Arch.fp,12);
+//        	this.section.emit(new AssemblyItem.Instruction.Syscall());
+//        	
+//        }
+//		if(p.name.equals("print_s")) {
+//        	this.section.emit("li", Register.Arch.v0, 4);
+//
+//
+//        	this.section.emitLoad("lw", Register.Arch.a0,  Register.Arch.fp,12);
+//        	this.section.emit(new AssemblyItem.Instruction.Syscall());
+//        	
+//        }
+//		if(p.name.equals("read_i")) {
+//			Register resReg = new Register.Virtual();
+//        	this.section.emit("li", Register.Arch.v0, 5);
+//        	this.section.emit(new AssemblyItem.Instruction.Syscall());
+//        	this.section.emitStore("sw", Register.Arch.v0, Register.Arch.fp,8);
+//        
+//        }
+//		if(p.name.equals("read_c")) {
+//			Register resReg = new Register.Virtual();
+//        	this.section.emit("li", Register.Arch.v0, 12);
+//        	this.section.emit(new AssemblyItem.Instruction.Syscall());
+//			this.section.emitStore("sw", Register.Arch.v0, Register.Arch.fp,8);   	
+//        }
         // 2) emit the body of the function
         p.block.accept(this);
         // 3) emit the epilog
-        this.section.emit(AssemblyItem.Instruction.popRegisters);
+		this.section.emit("addi", Register.Arch.sp,Register.Arch.sp, 4);
         this.section.emitLoad("lw",Register.Arch.fp,Register.Arch.fp,0);
         if(p.name.equals("main")) {
         	this.section.emit("li", Register.Arch.v0, 10);
         	this.section.emit(new AssemblyItem.Instruction.Syscall());
+        	return null;
         }
+        this.section.emit("jr",Register.Arch.ra);
 
         return null;
     }

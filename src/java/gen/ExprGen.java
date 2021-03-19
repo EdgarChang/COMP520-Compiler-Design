@@ -55,12 +55,21 @@ public class ExprGen implements ASTVisitor<Register> {
     @Override
     public Register visitVarExpr(VarExpr v) {
     	Register resReg = new Register.Virtual();
-    	if(v.vd.offset != 0) {
-    		this.section.emitLoad("lw", resReg, Register.Arch.fp, v.vd.offset);
+    	if(v.vd.type!=BaseType.CHAR) {
+    		if(v.vd.offset != 0) {
+    			this.section.emitLoad("lw", resReg, Register.Arch.fp, v.vd.offset); 		
+    		}else {
+    			this.section.emitLoadLabel(resReg, v.vd.label);
+    		}
+
     	}else {
-    		this.section.emitLoadLabel(resReg, v.vd.label);
+    		if(v.vd.offset != 0) {
+    			this.section.emitLoad("lb", resReg, Register.Arch.fp, v.vd.offset); 		
+    		}else {
+    			this.section.emitLoadCLabel(resReg, v.vd.label);
+    		}
     	}
-		
+    	
 		
         return resReg;
     }
@@ -98,7 +107,7 @@ public class ExprGen implements ASTVisitor<Register> {
 	@Override
 	public Register visitStructType(StructType st) {
 		// TODO Auto-generated method stub
-		return null;
+        throw new ShouldNotReach();
 	}
 
 	@Override
@@ -140,9 +149,34 @@ public class ExprGen implements ASTVisitor<Register> {
         	this.section.emitMove("move", resReg, Register.Arch.v0);
         	return resReg;
         }
+		if(f.name.equals("mcmalloc")) {
+			Register resReg = new Register.Virtual();
+			Register arg = f.params.get(0).accept(this);
+			this.section.emit("li", Register.Arch.v0, 9);
+        	this.section.emitMove("move", Register.Arch.a0, arg);
+        	this.section.emit(new AssemblyItem.Instruction.Syscall());
+        	this.section.emitMove("move", resReg, Register.Arch.v0);
+        	return resReg;
+		}
 		
+		for(Expr e:f.params) {
+			Register r = e.accept(this);
+			this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, -4 );
+			this.section.emitStore("sw", r, Register.Arch.sp, 0);
+		}
+		Register resReg = new Register.Virtual();
+		this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, -4 );
+		this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, -4 );
+		this.section.emitStore("sw", Register.Arch.ra, Register.Arch.sp, 0);
+		this.section.emit("jal",f.fd.label);
+		this.section.emitLoad("lw",Register.Arch.ra, Register.Arch.sp,0);
+		this.section.emitLoad("lw",resReg, Register.Arch.sp, 4);
+		this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, 8);
+		for(Expr e:f.params) {
+			this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, 4 );
+		}
 		
-		return null;
+		return resReg;
 	}
 
 	@Override
@@ -248,8 +282,7 @@ public class ExprGen implements ASTVisitor<Register> {
 
 	@Override
 	public Register visitOp(Op o) {
-		// TODO Auto-generated method stub
-		return null;
+        throw new ShouldNotReach();
 	}
 
 	@Override
@@ -285,13 +318,22 @@ public class ExprGen implements ASTVisitor<Register> {
 	@Override
 	public Register visitValueAtExpr(ValueAtExpr a) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		return a.expression.accept(this);
 	}
 
 	@Override
 	public Register visitSizeOfExpr(SizeOfExpr a) {
 		// TODO Auto-generated method stub
-		return null;
+		Register resReg = new Register.Virtual();
+		if(a.type==BaseType.CHAR) {
+			this.section.emit("li",resReg,1);
+		}else if(a.type==BaseType.INT) {
+			this.section.emit("li",resReg,4);
+		} else {
+			this.section.emit("li",resReg,4);
+		}
+		return resReg;
 	}
 
 	@Override
@@ -306,14 +348,12 @@ public class ExprGen implements ASTVisitor<Register> {
 
 	@Override
 	public Register visitWhile(While w) {
-		// TODO Auto-generated method stub
-		return null;
+        throw new ShouldNotReach();
 	}
 
 	@Override
 	public Register visitIf(If i) {
-		// TODO Auto-generated method stub
-		return null;
+        throw new ShouldNotReach();
 	}
 
 	@Override
@@ -325,8 +365,7 @@ public class ExprGen implements ASTVisitor<Register> {
 
 	@Override
 	public Register visitReturn(Return r) {
-		// TODO Auto-generated method stub
-		return null;
+        throw new ShouldNotReach();
 	}
 
 	@Override
@@ -337,14 +376,12 @@ public class ExprGen implements ASTVisitor<Register> {
 
 	@Override
 	public Register visitPointerType(PointerType p) {
-		// TODO Auto-generated method stub
-		return null;
+        throw new ShouldNotReach();
 	}
 
 	@Override
 	public Register visitArrayType(ArrayType a) {
-		// TODO Auto-generated method stub
-		return null;
+        throw new ShouldNotReach();
 	}
 
     // TODO: to complete (only deal with Expression nodes, anything else should throw ShouldNotReach)
