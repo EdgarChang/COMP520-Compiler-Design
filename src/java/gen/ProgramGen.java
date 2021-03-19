@@ -55,6 +55,16 @@ public class ProgramGen implements ASTVisitor<Void> {
     @Override
     public Void visitVarDecl(VarDecl vd) {
         // TODO: to complete: declare the variable globally in the data section and remember its label somewhere (e.g. in the VarDecl AST node directly).
+    	if(vd.type.getClass() == StructType.class) {
+    		AssemblyItem.StructLabel label = new AssemblyItem.StructLabel(vd.varName);
+        	vd.label = label;
+//        	/System.out.println(((StructType)vd.type).sd + "hello");
+        	int size = 4*vd.params;
+        	System.out.println(size + "hi");
+        	this.dataSection.emit(label);
+        	this.dataSection.emit(new AssemblyItem.Directive.Space(size));
+        	return null;
+    	}
     	AssemblyItem.Label label = new AssemblyItem.Label(vd.varName);
     	vd.label = label;
     	this.dataSection.emit(label);

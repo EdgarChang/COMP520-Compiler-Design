@@ -10,7 +10,7 @@ import ast.*;
 public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 	Scope scope;
 	
-	
+	private Map<String, Integer> structTable = new HashMap<>();
 	public NameAnalysisVisitor(Scope scope){
 		this.scope=scope;
 	}
@@ -36,7 +36,8 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 			visitVarDecl(vd);
 		}
 		scope=old;
-		
+		this.structTable.put(sts.type.struct, sts.params.size());
+
 		
 		return null;
 	}
@@ -132,6 +133,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 			if(a==null) {
 				error("Struct not declared yet");
 			}else {
+				vd.params = this.structTable.get(((StructType)vd.type).struct);
 				this.scope.put(new VarSymbol(vd));
 			}
 			

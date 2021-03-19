@@ -174,7 +174,7 @@ public class Parser {
     private List<StructTypeDecl> parseStructDecls() {
     	List<StructTypeDecl> stds = new ArrayList<StructTypeDecl>();
     	
-        while(accept(TokenClass.STRUCT)) {
+        while(accept(TokenClass.STRUCT)&&lookAhead(2).tokenClass==(TokenClass.LBRA)) {
         	StructType type;
         	List<VarDecl> params = new ArrayList<VarDecl>();
         	String structname = "";

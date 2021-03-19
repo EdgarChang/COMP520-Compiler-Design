@@ -645,4 +645,22 @@ public abstract class AssemblyItem {
         }
 
     }
+    public static class StructLabel extends Label {
+
+        public final String name;
+        
+        public StructLabel(String name) {
+            this.name = name;
+        }
+      
+        @Override
+        public String toString() {
+            return ".globl " + this.name+ " \n" + this.name;
+        }
+
+        public void accept(AssemblyItemVisitor v) {
+            v.visitLabel(this);
+        }
+
+    }
 }

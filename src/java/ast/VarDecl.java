@@ -7,6 +7,7 @@ public class VarDecl implements ASTNode {
     public final String varName;
     public AssemblyItem.Label label;
     public int offset;
+    public int params;
 
     public VarDecl(Type type, String varName) {
 	    this.type = type;
