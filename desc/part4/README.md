@@ -7,7 +7,7 @@ As seen in the lecture, you have to implement liveness analysis on a control-flo
 
 **Important**: the marking will be done using a series of automated tests as in part III.
 Your mark will be a function of the number of tests your compiler compiles correctly.
-However, we will also do a manual inspection of your code to verify that you are using liveness analysis and Chaitin algorithm for register allocation.
+However, we will also do a manual inspection of your code to verify that you are using liveness analysis, Chaitin algorithm for register allocation and have implemented the optimization described in the last step.
 If you do not implement the algorithm below and instead simply use the naive register allocator as for part III, you will score 0 for this part.
 
 ## 1. Building Control-Flow Graph (CFG)
@@ -65,6 +65,46 @@ Note that line 41 of the corresponding file contains the registers that are used
 As mentioned, you should never need more than three registers when spilling.
 Therefore, when reusing this code, you should really only be using three registers and not six as the original code suggest.
 
+
+## 6. Local variables in registers
+
+Finally, your last task will consist of "promoting" all variables declared locally into registers.
+To do so, you should modify your variable allocation strategy and allocate local variables in a virtual register instead of using the stack whenever possible.
+
+You should do this for every **local** variables, excepts when:
+
+* the variable is of type struct or array
+* the variable is a function parameter
+* the variable used with an addressOf operator
+
+In all those cases, the allocation should be done on the stack as usual.
+
+We suggest that you implement a pass that runs before code generation starts to identify all the local variables that should be stored in registers.
+Then, simply modify your code generator (`FunGen`) to allocate each identified local variables in a virtual register.
+
+Example:
+``` C
+
+struct pt_t {
+  int x;
+  int y;
+}
+
+int global_i;    // statically allocated
+
+int foo(int a    // stack allocated) {
+  int i;         // register allocated
+  int j;         // stack allocated (used in addressOf operator)
+  int arr[10];   // stack allocated (it is an array)
+  struct v pt_t; // stack allocated (it is a struct)
+  int * ptr;     // register allocated
+  ...
+  ptr = &j;
+  ...
+}
+``` 
  
- 
+ **Important**: Although this last step is an optimization, we will manually check that you have implemented it.
+ If you do not implement it, you will score a zero for part IV.
+
 
