@@ -68,14 +68,14 @@ Therefore, when reusing this code, you should really only be using three registe
 
 ## 6. Local variables in registers
 
-Finally, your last task will consist of "promoting" all variables declared locally into registers.
-To do so, you should modify your variable allocation strategy and allocate local variables in a virtual register instead of using the stack whenever possible.
+Finally, your last task will consist of "promoting" all variables declared locally into virtual registers.
+To do so, you should modify your variable allocation strategy and allocate local variables in virtual registers instead of using the stack whenever possible.
 
-You should do this for every **local** variables, excepts when:
+You should do this for every **local** variable, excepts when:
 
 * the variable is of type struct or array
 * the variable is a function parameter
-* the variable used with an addressOf operator
+* the variable is used with an addressOf operator
 
 In all those cases, the allocation should be done on the stack as usual.
 
