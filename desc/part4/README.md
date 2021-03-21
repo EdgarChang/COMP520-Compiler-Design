@@ -96,7 +96,7 @@ int foo(int a    // stack allocated) {
   int i;         // register allocated
   int j;         // stack allocated (used in addressOf operator)
   int arr[10];   // stack allocated (it is an array)
-  struct v pt_t; // stack allocated (it is a struct)
+  struct pt_t pt; // stack allocated (it is a struct)
   int * ptr;     // register allocated
   ...
   ptr = &j;
