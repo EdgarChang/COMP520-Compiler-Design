@@ -111,7 +111,7 @@ public class AddrGen implements ASTVisitor<Register> {
 		// TODO Auto-generated method stub
 		Register resReg = new Register.Virtual();
 		if(a.array.getClass()==VarExpr.class && ((VarExpr)a.array).vd.offset!=0) {
-			System.out.println("damn");
+			
 			Register index = a.index.accept(new ExprGen(asmProg, this.section, this.dataSection));
 			Register offset = new Register.Virtual();
 			this.section.emit("li", offset, -4);
