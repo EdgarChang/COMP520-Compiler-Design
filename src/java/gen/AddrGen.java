@@ -57,7 +57,7 @@ public class AddrGen implements ASTVisitor<Register> {
         // TODO: to complete
     	Register resReg = new Register.Virtual();
     	if(v.vd.offset!=0) {
-    		this.section.emit("addi", resReg, Register.Arch.fp,v.vd.offset);
+    		this.section.emit("addiu", resReg, Register.Arch.fp,v.vd.offset);
     	} else {
     		this.section.emitLA(resReg,v.vd.label);
     	}
@@ -117,8 +117,8 @@ public class AddrGen implements ASTVisitor<Register> {
 			this.section.emit("li", offset, -4);
 			this.section.emit("mult", index, offset);
 			this.section.emit("mflo", index);
-			this.section.emit("addi", index, index, ((VarExpr)a.array).vd.offset);
-			this.section.emit("add", resReg, index, Register.Arch.fp);
+			this.section.emit("addiu", index, index, ((VarExpr)a.array).vd.offset);
+			this.section.emit("addu", resReg, index, Register.Arch.fp);
 //			this.section.emitLoad("lw", resReg, index, 0);
 			return resReg;
 		}
@@ -131,7 +131,7 @@ public class AddrGen implements ASTVisitor<Register> {
 			this.section.emit("mult", index, offset);
 			this.section.emit("mflo", index);
 		}
-		this.section.emit("add",resReg,array,index);
+		this.section.emit("addu",resReg,array,index);
 	
 		return resReg;
 	}

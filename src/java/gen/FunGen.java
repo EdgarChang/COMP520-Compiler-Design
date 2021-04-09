@@ -35,11 +35,11 @@ public class FunGen implements ASTVisitor<Void> {
 
 	public void vardeclHelper(Block b, Stmt statement) {
 		if(statement.getClass()==While.class) {
-			System.out.println("aloha");
+
 			if(((While)statement).statement.getClass()==Block.class) {
 				for(VarDecl vardecl : ((Block)((While)statement).statement).varDecls) {
 					if(vardecl!=null) {
-						System.out.println(vardecl.varName);
+
 						b.varDecls.add(vardecl);
 					}
 				}
@@ -52,7 +52,7 @@ public class FunGen implements ASTVisitor<Void> {
 			if(((If)statement).statement1.getClass()==Block.class) {
 				for(VarDecl vardecl : ((Block)((If)statement).statement1).varDecls) {
 					if(vardecl!=null) {
-						System.out.println(vardecl.varName);
+
 						b.varDecls.add(vardecl);
 					}
 				}
@@ -60,17 +60,20 @@ public class FunGen implements ASTVisitor<Void> {
 					vardeclHelper(b,s);
 				}
 			}
-			if(((If)statement).statement2.getClass()==Block.class) {
+			if(((If)statement).statement2!=null){
+				if(((If)statement).statement2.getClass()==Block.class) {
 				for(VarDecl vardecl : ((Block)((If)statement).statement2).varDecls) {
 					if(vardecl!=null) {
-						System.out.println(vardecl.varName);
+
 						b.varDecls.add(vardecl);
 					}
 				}
 				for(Stmt s: ((Block)((If)statement).statement2).stmts) {
 					vardeclHelper(b,s);
 				}
+				}
 			}
+			
 		}
 	}
 	@Override
@@ -97,11 +100,11 @@ public class FunGen implements ASTVisitor<Void> {
 
 						b.varDecls.get(i).offset = -4 * (i + 1 + array);
 					}
-					System.out.println(b.varDecls.get(i).offset);
+//					System.out.println(b.varDecls.get(i).offset);
 				}
 			}
 		
-			this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array) * -4);
+			this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array) * -4);
 			
 
 			this.section.emit(AssemblyItem.Instruction.pushRegisters);
@@ -112,11 +115,20 @@ public class FunGen implements ASTVisitor<Void> {
 			this.section.emit(AssemblyItem.Instruction.popRegisters);
 
 			if (b.varDecls != null) {
-				this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array) * 4);
+				this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array) * 4);
 			}
 		}else {
+			this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array) * -4);
+			
+
+			this.section.emit(AssemblyItem.Instruction.pushRegisters);
 			for (Stmt statement : b.stmts) {
 				statement.accept(this);
+			}
+			this.section.emit(AssemblyItem.Instruction.popRegisters);
+
+			if (b.varDecls != null) {
+				this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array) * 4);
 			}
 		}
 		
@@ -142,7 +154,7 @@ public class FunGen implements ASTVisitor<Void> {
 
 		// TODO: to complete:
 		// 1) emit the prolog
-		this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, -4);
+		this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, -4);
 		this.section.emitStore("sw", Register.Arch.fp, Register.Arch.sp, 0);
 		this.section.emitMove("move", Register.Arch.fp, Register.Arch.sp);
 //        if(p.name.equals("print_i")) {
@@ -182,7 +194,7 @@ public class FunGen implements ASTVisitor<Void> {
 		// 2) emit the body of the function
 		p.block.accept(this);
 		// 3) emit the epilog
-		this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, 4);
+		this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, 4);
 		this.section.emitLoad("lw", Register.Arch.fp, Register.Arch.fp, 0);
 		if (p.name.equals("main")) {
 			this.section.emit("li", Register.Arch.v0, 10);
@@ -348,13 +360,13 @@ public class FunGen implements ASTVisitor<Void> {
 	public Void visitReturn(Return r) {
 		// TODO Auto-generated method stub
 		if (r.expression != null) {
-			System.out.print(r.expression.type);
+			
 			if (r.expression.type == BaseType.CHAR) {
 				Register value = r.expression.accept(new ExprGen(asmProg, this.section, this.dataSection));
 				this.section.emitStore("sb", value, Register.Arch.fp, 8);
 
 			} else {
-				System.out.print(r.expression.type + "hello");
+		
 				Register value = r.expression.accept(new ExprGen(asmProg, this.section, this.dataSection));
 				this.section.emitStore("sw", value, Register.Arch.fp, 8);
 			}

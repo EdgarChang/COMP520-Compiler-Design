@@ -60,15 +60,19 @@ public class ExprGen implements ASTVisitor<Register> {
     	
     	if(v.vd.type!=BaseType.CHAR) {
     		if(v.vd.offset != 0) {
+//    			System.out.println(v.vd.varName + "yasbish");
     			this.section.emitLoad("lw", resReg, Register.Arch.fp, v.vd.offset); 		
     		}else {
+
     			this.section.emitLoadLabel(resReg, v.vd.label);
     		}
 
     	}else {
     		if(v.vd.offset != 0) {
+//    			System.out.println(v.vd.varName + "yasbish");
     			this.section.emitLoad("lb", resReg, Register.Arch.fp, v.vd.offset); 		
     		}else {
+    		
     			this.section.emitLoadCLabel(resReg, v.vd.label);
     		}
     	}
@@ -166,19 +170,19 @@ public class ExprGen implements ASTVisitor<Register> {
 		
 		for(Expr e:f.params) {
 			Register r = e.accept(this);
-			this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, -4 );
+			this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, -4 );
 			this.section.emitStore("sw", r, Register.Arch.sp, 0);
 		}
 		Register resReg = new Register.Virtual();
-		this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, -4 );
-		this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, -4 );
+		this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, -4 );
+		this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, -4 );
 		this.section.emitStore("sw", Register.Arch.ra, Register.Arch.sp, 0);
 		this.section.emit("jal",f.fd.label);
 		this.section.emitLoad("lw",Register.Arch.ra, Register.Arch.sp,0);
 		this.section.emitLoad("lw",resReg, Register.Arch.sp, 4);
 		this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, 8);
 		for(Expr e:f.params) {
-			this.section.emit("addi", Register.Arch.sp, Register.Arch.sp, 4 );
+			this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, 4 );
 		}
 		
 		return resReg;
@@ -194,7 +198,7 @@ public class ExprGen implements ASTVisitor<Register> {
 		switch(b.op) {
 			case ADD:{
 				Register rhsReg = b.expression2.accept(this);
-				this.section.emit("add", resReg, lhsReg, rhsReg);
+				this.section.emit("addu", resReg, lhsReg, rhsReg);
 				break;
 			}
 			case MUL:{
@@ -205,7 +209,7 @@ public class ExprGen implements ASTVisitor<Register> {
 			}
 			case SUB:{
 				Register rhsReg = b.expression2.accept(this);
-				this.section.emit("sub", resReg, lhsReg, rhsReg);
+				this.section.emit("subu", resReg, lhsReg, rhsReg);
 				break;
 			}
 			case DIV:{
@@ -307,8 +311,8 @@ public class ExprGen implements ASTVisitor<Register> {
 			this.section.emit("li", offset, -4);
 			this.section.emit("mult", index, offset);
 			this.section.emit("mflo", index);
-			this.section.emit("addi", index, index, ((VarExpr)a.array).vd.offset);
-			this.section.emit("add", index, index, Register.Arch.fp);
+			this.section.emit("addiu", index, index, ((VarExpr)a.array).vd.offset);
+			this.section.emit("addu", index, index, Register.Arch.fp);
 			this.section.emitLoad("lw", resReg, index, 0);
 			return resReg;
 		}
@@ -321,7 +325,7 @@ public class ExprGen implements ASTVisitor<Register> {
 			this.section.emit("mult", index, offset);
 			this.section.emit("mflo", index);
 		}
-		this.section.emit("add",array,array,index);
+		this.section.emit("addu",array,array,index);
 		this.section.emitLoad("lw",resReg,array,0);
 		
 		return resReg;
