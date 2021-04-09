@@ -35,8 +35,20 @@ public class FunGen implements ASTVisitor<Void> {
     public Void visitBlock(Block b) {
         // TODO: to complete
     	if(b.varDecls!=null) {
+    		int array = 0;
         	for(int i = 0; i < b.varDecls.size(); i++) {
-        		b.varDecls.get(i).offset = -4*(i+1);
+        		System.out.println(b.varDecls.get(i).varName);
+        		if(b.varDecls.get(i).type.getClass() == ArrayType.class) {
+        			b.varDecls.get(i).offset = -4*(i+1+array);
+        			System.out.println("Sup bitch" + -4*(i+1+array));
+        			array += ((ArrayType)b.varDecls.get(i).type).num-1;
+        			
+        			
+        		}else {
+        			b.varDecls.get(i).offset = -4*(i+1+array);
+        			System.out.println("Sup bitch" + -4*(i+1+array));
+        		}
+        		
         	}
         	this.section.emit("addi", Register.Arch.sp,Register.Arch.sp, b.varDecls.size()*-4);
         }
