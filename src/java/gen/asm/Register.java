@@ -1,10 +1,14 @@
 package gen.asm;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author cdubach
  */
 public abstract class Register {
-
+	public List<Node> defs;
+	public List<Node> uses;
     abstract public boolean isVirtual();
 
     static public class Virtual extends Register {
@@ -12,6 +16,9 @@ public abstract class Register {
         private final int id;
         public Virtual() {
             this.id = cnt++;
+            this.defs = new ArrayList<Node>();
+            this.uses = new ArrayList<Node>();
+
         }
         public String toString() {
             return "v"+id;
