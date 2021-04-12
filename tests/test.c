@@ -14,19 +14,34 @@
 //  a31 = empty; a32 = empty;  a33 = empty;
 // }
 
-// int hello(int a) {
+int hello(int a) {
    
-//     return 1;
-// }
+    return 1;
+}
+int hello1(int a) {
+   
+    return 4;
+}
+int hello2(int a) {
+   
+    return 5;
+}
+int hello3(int a) {
+   
+    return 6;
+}
 void main(){
     // int x;
     // hey[2]=3;
     // x= hello(3);
     // print_i(hey[1]);
-    // print_i(hello(1));
+    
 
     int x;
-
+    print_i(hello(1));
+    print_i(hello1(1));
+    print_i(hello2(1));
+    print_i(hello3(5));
     x=3;
     // while(x>1){
     //     // int s[1000];
