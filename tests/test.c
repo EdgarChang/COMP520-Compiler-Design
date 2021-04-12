@@ -28,14 +28,15 @@ void main(){
     int x;
 
     x=3;
-    while(x>1){
-        // int s[1000];
-        // s[700]=9;
-        // print_i(s[700]);
+    // while(x>1){
+    //     // int s[1000];
+    //     // s[700]=9;
+    //     // print_i(s[700]);
         print_i(x);
-        x=x-1;
-
-    }
+    //     x=x-1;
+    x=x+1;
+     print_i(x);
+    // }
 }
 
 

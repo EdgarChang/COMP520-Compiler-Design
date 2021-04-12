@@ -146,26 +146,6 @@ jr $ra
 
 .data
 # Allocated labels for virtual registers
-label_17_v2:
-.space 4
-label_12_v1:
-.space 4
-label_28_v9:
-.space 4
-label_19_v3:
-.space 4
-label_25_v8:
-.space 4
-label_13_v0:
-.space 4
-label_26_v11:
-.space 4
-label_16_v5:
-.space 4
-label_29_v7:
-.space 4
-label_21_v6:
-.space 4
 
 .text
 .globl main 
@@ -177,254 +157,164 @@ addiu $sp,$sp,-4
 sw $fp,0($sp)
 # Original instruction: move $fp,$sp
 move $fp,$sp
-# Original instruction: addiu $sp,$sp,-4
-addiu $sp,$sp,-4
+# Original instruction: addiu $sp,$sp,-24
+addiu $sp,$sp,-24
 # Original instruction: pushRegisters
-la $t0,label_17_v2
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_12_v1
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_28_v9
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_19_v3
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_25_v8
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_13_v0
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_26_v11
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_16_v5
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_29_v7
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_21_v6
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-# Original instruction: addiu v0,$fp,-4
-addiu $t5,$fp,-4
-la $t0,label_13_v0
-sw $t5,0($t0)
-# Original instruction: li v1,3
-li $t5,3
-la $t0,label_12_v1
-sw $t5,0($t0)
-# Original instruction: sw v1,0(v0)
-la $t5,label_12_v1
-lw $t5,0($t5)
-la $t4,label_13_v0
-lw $t4,0($t4)
-sw $t5,0($t4)
-label_9_While:
-# Original instruction: lw v2,-4($fp)
-lw $t5,-4($fp)
-la $t0,label_17_v2
-sw $t5,0($t0)
-# Original instruction: li v5,1
-li $t5,1
-la $t0,label_16_v5
-sw $t5,0($t0)
-# Original instruction: slt v3,v5,v2
-la $t5,label_16_v5
-lw $t5,0($t5)
-la $t4,label_17_v2
-lw $t4,0($t4)
-slt $t3,$t5,$t4
-la $t0,label_19_v3
-sw $t3,0($t0)
-# Original instruction: beq v3,$zero,label_8_End
-la $t5,label_19_v3
-lw $t5,0($t5)
-beq $t5,$zero,label_8_End
-# Original instruction: addiu $sp,$sp,0
-addiu $sp,$sp,0
-# Original instruction: pushRegisters
-la $t0,label_17_v2
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_12_v1
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_28_v9
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_19_v3
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_25_v8
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_13_v0
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_26_v11
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_16_v5
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_29_v7
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_21_v6
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-# Original instruction: li $v0,1
-li $v0,1
-# Original instruction: lw v6,-4($fp)
-lw $t5,-4($fp)
-la $t0,label_21_v6
-sw $t5,0($t0)
-# Original instruction: move $a0,v6
-la $t5,label_21_v6
-lw $t5,0($t5)
-move $a0,$t5
+# Original instruction: li $v0,4
+li $v0,4
+# Original instruction: la v0,label_8_str
+la $t3,label_8_str
+# Original instruction: move $a0,v0
+move $a0,$t3
 # Original instruction: syscall
 syscall
-# Original instruction: addiu v7,$fp,-4
-addiu $t5,$fp,-4
-la $t0,label_29_v7
-sw $t5,0($t0)
+# Original instruction: addiu v1,$fp,-4
+addiu $t4,$fp,-4
+# Original instruction: li $v0,5
+li $v0,5
+# Original instruction: syscall
+syscall
+# Original instruction: move v2,$v0
+move $t3,$v0
+# Original instruction: sw v2,0(v1)
+sw $t3,0($t4)
+# Original instruction: addiu v3,$fp,-8
+addiu $t4,$fp,-8
+# Original instruction: li v4,0
+li $t3,0
+# Original instruction: sw v4,0(v3)
+sw $t3,0($t4)
+# Original instruction: addiu v5,$fp,-12
+addiu $t3,$fp,-12
+# Original instruction: li v6,1
+li $t4,1
+# Original instruction: sw v6,0(v5)
+sw $t4,0($t3)
+# Original instruction: li $v0,4
+li $v0,4
+# Original instruction: la v7,label_9_str
+la $t3,label_9_str
+# Original instruction: move $a0,v7
+move $a0,$t3
+# Original instruction: syscall
+syscall
+# Original instruction: li $v0,1
+li $v0,1
 # Original instruction: lw v8,-4($fp)
-lw $t5,-4($fp)
-la $t0,label_25_v8
-sw $t5,0($t0)
-# Original instruction: li v11,1
-li $t5,1
-la $t0,label_26_v11
-sw $t5,0($t0)
-# Original instruction: subu v9,v8,v11
-la $t5,label_25_v8
-lw $t5,0($t5)
-la $t4,label_26_v11
-lw $t4,0($t4)
-subu $t3,$t5,$t4
-la $t0,label_28_v9
-sw $t3,0($t0)
-# Original instruction: sw v9,0(v7)
-la $t5,label_28_v9
-lw $t5,0($t5)
-la $t4,label_29_v7
-lw $t4,0($t4)
-sw $t5,0($t4)
-# Original instruction: popRegisters
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_21_v6
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_29_v7
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_16_v5
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_26_v11
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_13_v0
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_25_v8
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_19_v3
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_28_v9
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_12_v1
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_17_v2
-sw $t0,0($t1)
+lw $t3,-4($fp)
+# Original instruction: move $a0,v8
+move $a0,$t3
+# Original instruction: syscall
+syscall
+# Original instruction: li $v0,4
+li $v0,4
+# Original instruction: la v9,label_10_str
+la $t3,label_10_str
+# Original instruction: move $a0,v9
+move $a0,$t3
+# Original instruction: syscall
+syscall
+# Original instruction: addiu v10,$fp,-20
+addiu $t4,$fp,-20
+# Original instruction: li v11,0
+li $t3,0
+# Original instruction: sw v11,0(v10)
+sw $t3,0($t4)
+label_12_While:
+# Original instruction: lw v12,-20($fp)
+lw $t3,-20($fp)
+# Original instruction: lw v15,-4($fp)
+lw $t4,-4($fp)
+# Original instruction: slt v13,v12,v15
+slt $t3,$t3,$t4
+# Original instruction: beq v13,$zero,label_11_End
+beq $t3,$zero,label_11_End
 # Original instruction: addiu $sp,$sp,0
 addiu $sp,$sp,0
-# Original instruction: j ,label_9_While
-j ,label_9_While
-label_8_End:
+# Original instruction: pushRegisters
+# Original instruction: lw v16,-20($fp)
+lw $t3,-20($fp)
+# Original instruction: li v19,1
+li $t4,1
+# Original instruction: slt v18,v19,v16
+slt $t3,$t4,$t3
+# Original instruction: xori v17,v18,1
+xori $t3,$t3,1
+# Original instruction: beq v17,$zero,label_13_Else
+beq $t3,$zero,label_13_Else
+# Original instruction: addiu v20,$fp,-16
+addiu $t4,$fp,-16
+# Original instruction: lw v21,-20($fp)
+lw $t3,-20($fp)
+# Original instruction: sw v21,0(v20)
+sw $t3,0($t4)
+# Original instruction: j ,label_14_End
+j ,label_14_End
+label_13_Else:
+# Original instruction: addiu $sp,$sp,0
+addiu $sp,$sp,0
+# Original instruction: pushRegisters
+# Original instruction: addiu v22,$fp,-16
+addiu $t5,$fp,-16
+# Original instruction: lw v23,-8($fp)
+lw $t3,-8($fp)
+# Original instruction: lw v26,-12($fp)
+lw $t4,-12($fp)
+# Original instruction: addu v24,v23,v26
+addu $t3,$t3,$t4
+# Original instruction: sw v24,0(v22)
+sw $t3,0($t5)
+# Original instruction: addiu v27,$fp,-8
+addiu $t4,$fp,-8
+# Original instruction: lw v28,-12($fp)
+lw $t3,-12($fp)
+# Original instruction: sw v28,0(v27)
+sw $t3,0($t4)
+# Original instruction: addiu v29,$fp,-12
+addiu $t3,$fp,-12
+# Original instruction: lw v30,-16($fp)
+lw $t4,-16($fp)
+# Original instruction: sw v30,0(v29)
+sw $t4,0($t3)
 # Original instruction: popRegisters
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_21_v6
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_29_v7
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_16_v5
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_26_v11
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_13_v0
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_25_v8
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_19_v3
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_28_v9
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_12_v1
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_17_v2
-sw $t0,0($t1)
-# Original instruction: addiu $sp,$sp,4
-addiu $sp,$sp,4
+# Original instruction: addiu $sp,$sp,0
+addiu $sp,$sp,0
+label_14_End:
+# Original instruction: li $v0,1
+li $v0,1
+# Original instruction: lw v31,-16($fp)
+lw $t3,-16($fp)
+# Original instruction: move $a0,v31
+move $a0,$t3
+# Original instruction: syscall
+syscall
+# Original instruction: li $v0,4
+li $v0,4
+# Original instruction: la v32,label_15_str
+la $t3,label_15_str
+# Original instruction: move $a0,v32
+move $a0,$t3
+# Original instruction: syscall
+syscall
+# Original instruction: addiu v33,$fp,-20
+addiu $t3,$fp,-20
+# Original instruction: lw v34,-20($fp)
+lw $t4,-20($fp)
+# Original instruction: li v37,1
+li $t5,1
+# Original instruction: addu v35,v34,v37
+addu $t4,$t4,$t5
+# Original instruction: sw v35,0(v33)
+sw $t4,0($t3)
+# Original instruction: popRegisters
+# Original instruction: addiu $sp,$sp,0
+addiu $sp,$sp,0
+# Original instruction: j ,label_12_While
+j ,label_12_While
+label_11_End:
+# Original instruction: popRegisters
+# Original instruction: addiu $sp,$sp,24
+addiu $sp,$sp,24
 # Original instruction: addiu $sp,$sp,4
 addiu $sp,$sp,4
 # Original instruction: lw $fp,0($fp)
@@ -433,4 +323,24 @@ lw $fp,0($fp)
 li $v0,10
 # Original instruction: syscall
 syscall
+
+.data
+label_8_str:
+.asciiz "Enter the number of fib you want: "
+.align 2
+
+.data
+label_9_str:
+.asciiz "First "
+.align 2
+
+.data
+label_10_str:
+.asciiz " terms of Fibonacci series are : "
+.align 2
+
+.data
+label_15_str:
+.asciiz " "
+.align 2
 
