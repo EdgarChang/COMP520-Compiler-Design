@@ -76,7 +76,8 @@ public class ExprGen implements ASTVisitor<Register> {
     		if(v.vd.offset != 0) {
 
     			if(v.vd.isRegisterAllocated()) {
-    				this.section.emitMove("move", resReg, v.vd.register); 	
+//    				this.section.emitMove("move", resReg, v.vd.register); 	
+    				return v.vd.register;
     			}else {
     				this.section.emitLoad("lb", resReg, Register.Arch.fp, v.vd.offset); 	
     			}
@@ -130,24 +131,27 @@ public class ExprGen implements ASTVisitor<Register> {
 	@Override
 	public Register visitFunCallExpr(FunCallExpr f) {
 		if(f.name.equals("print_i")) {
-        	this.section.emit("li", Register.Arch.v0, 1);
+        	
         	Register arg = f.params.get(0).accept(this);
+        	this.section.emit("li", Register.Arch.v0, 1);
         	this.section.emitMove("move", Register.Arch.a0, arg);
         	this.section.emit(new AssemblyItem.Instruction.Syscall());
         	return arg;
         	
         }
 		if(f.name.equals("print_c")) {
-        	this.section.emit("li", Register.Arch.v0, 11);
+        	
         	Register arg = f.params.get(0).accept(this);
+        	this.section.emit("li", Register.Arch.v0, 11);
         	this.section.emitMove("move", Register.Arch.a0, arg);
         	this.section.emit(new AssemblyItem.Instruction.Syscall());
         	return arg;
         	
         }
 		if(f.name.equals("print_s")) {
-        	this.section.emit("li", Register.Arch.v0, 4);
+        	
         	Register arg = f.params.get(0).accept(this);
+        	this.section.emit("li", Register.Arch.v0, 4);
         	this.section.emitMove("move", Register.Arch.a0, arg);
         	this.section.emit(new AssemblyItem.Instruction.Syscall());
         	return arg;
@@ -343,15 +347,17 @@ public class ExprGen implements ASTVisitor<Register> {
 	@Override
 	public Register visitAddressOfExpr(AddressOfExpr a) {
 		// TODO Auto-generated method stub
-		
-		return null;
+		Register address = a.expression.accept(new AddrGen(asmProg, this.section, this.dataSection)) ;
+		return address;
 	}
 
 	@Override
 	public Register visitValueAtExpr(ValueAtExpr a) {
 		// TODO Auto-generated method stub
-		
-		return a.expression.accept(this);
+		Register src = a.expression.accept(this);
+		Register res = new Register.Virtual();
+		this.section.emitLoad("lw", res, src, 0);
+		return res;
 	}
 
 	@Override

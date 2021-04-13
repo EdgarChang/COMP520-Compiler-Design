@@ -274,25 +274,31 @@ public class RegAlloc {
   
         // creates a map from virtual register to temporary architecture register for all registers appearing in the instructions
         insn.registers().forEach(reg -> {
-        	if(reg.isVirtual()) {
-        		if (vrMap.get(reg).isVirtual()) {
-        			Register tmp = freeTempRegs.pop();
-        			vrToAr.put(reg, tmp);
-        		}else {
-        			vrToAr.put(reg, vrMap.get(reg));
+        	if(reg!=null) {
+        		if(reg.isVirtual()) {
+        			if (vrMap.get(reg).isVirtual()) {
+        				Register tmp = freeTempRegs.pop();
+        				vrToAr.put(reg, tmp);
+        			}else {
+        				vrToAr.put(reg, vrMap.get(reg));
+        			}
         		}
         	}
+        	
             
         });
 
         // load the values of any virtual registers used by the instruction from memory into a temporary architectural register
         insn.uses().forEach(reg -> {
-            if (reg.isVirtual()&& vrMap.get(reg).isVirtual()) {
-                Register tmp = vrToAr.get(reg);
-                AssemblyItem.Label label = labelMap.get(reg);
-                section.emitLA(tmp, label);
-                section.emitLoad("lw", tmp, tmp, 0);
-            }
+        	if(reg!=null) {
+        		if (reg.isVirtual()&& vrMap.get(reg).isVirtual()) {
+        			Register tmp = vrToAr.get(reg);
+        			AssemblyItem.Label label = labelMap.get(reg);
+        			section.emitLA(tmp, label);
+        			section.emitLoad("lw", tmp, tmp, 0);
+        		}
+        	}
+            
         });
 
         // emit new instructions where all virtual register have been replaced by architectural ones

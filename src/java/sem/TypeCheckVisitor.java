@@ -300,7 +300,9 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 			error("No assignment for void and array type");
 			
 		}
-		if(e1 != e2) {
+		if(e1.getClass() != e2.getClass()) {
+			System.out.println(e1);
+			System.out.println(e2);
 			error("Incompatible assignment");
 			
 		}

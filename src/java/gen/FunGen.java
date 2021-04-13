@@ -82,7 +82,7 @@ public class FunGen implements ASTVisitor<Void> {
 		// TODO: to complete
 		int array = 0;
 		if(!ifWhile) {
-			
+			int registerAllocated = 0;
 			for (Stmt statement : b.stmts) {
 				vardeclHelper(b,statement);
 			}
@@ -98,15 +98,19 @@ public class FunGen implements ASTVisitor<Void> {
 						array += ((ArrayType) b.varDecls.get(i).type).num - 1;
 
 					} else {
-						Register.Virtual r = new Register.Virtual();
+						
 						b.varDecls.get(i).offset = -4 * (i + 1 + array);
-						b.varDecls.get(i).register = r;
+						if(!b.varDecls.get(i).addressOfUse) {
+							Register.Virtual r = new Register.Virtual();
+							b.varDecls.get(i).register = r;
+							registerAllocated++;
+						}
 					}
 //					System.out.println(b.varDecls.get(i).offset);
 				}
 			}
 		
-			this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array) * -4);
+			this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array-registerAllocated) * -4);
 			
 
 			this.section.emit(AssemblyItem.Instruction.pushRegisters);
@@ -117,10 +121,10 @@ public class FunGen implements ASTVisitor<Void> {
 			this.section.emit(AssemblyItem.Instruction.popRegisters);
 
 			if (b.varDecls != null) {
-				this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array) * 4);
+				this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array-registerAllocated) * 4);
 			}
 		}else {
-			this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array) * -4);
+			//this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array) * -4);
 			
 
 //			this.section.emit(AssemblyItem.Instruction.pushRegisters);
@@ -129,9 +133,9 @@ public class FunGen implements ASTVisitor<Void> {
 			}
 //			this.section.emit(AssemblyItem.Instruction.popRegisters);
 
-			if (b.varDecls != null) {
-				this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array) * 4);
-			}
+//			if (b.varDecls != null) {
+//				this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array) * 4);
+//			}
 		}
 		
 		return null;

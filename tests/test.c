@@ -12,7 +12,7 @@
 //  a11 = empty; a12 = empty;  a13 = empty;
 //  a21 = empty; a22 = empty;  a23 = empty;
 //  a31 = empty; a32 = empty;  a33 = empty;
-// }
+// // }
 
 // int hello(int a) {
    
@@ -26,54 +26,60 @@
    
 //     return 5;
 // }
-// int hello3(int a) {
-   
-//     return 6;
-// }
-// void main(){
-//     // int x;
-//     // hey[2]=3;
-//     // x= hello(3);
-//     // print_i(hey[1]);
+int hello3(int a) {
+//    a = a-9;
+//    print_i(a);
+  
+    return 6;
+}
+void main(){
+    // int x;
+    // hey[2]=3;
+    // x= hello(3);
+    // print_i(hey[1]);
     
 
-//     int x;
-//     // print_i(hello(1));
-//     // print_i(hello1(1));
-//     // print_i(hello2(1));
-//     // print_i(hello3(5));
-//     x=3;
-//     while(x<5){
-//         x = x+1;
-//         print_i(x);
-//     }
-//     // while(x>1){
-//     //     // int s[1000];
-//     //     // s[700]=9;
-//     //     // print_i(s[700]);
-//         print_i(x);
-//     //     x=x-1;
-//     x=x+1;
-//      print_i(x);
+    int x;
+    // print_i(hello(1));
+    // print_i(hello1(1));
+    // print_i(hello2(1));
+    // x=3;
+    print_i(hello3(x));
+    print_i(x);
+    x=3;
+    // while(x<5){
+    //     x = x+1;
+    //     print_i(x);
+    // }
+    // while(x>1){
+    //     int s[1000];
+    //     s[700]=9;
+    //     print_i(s[700]);
+    //     print_i(x);
+    //     x=x-1;
+    // }
+    // x=x+1;
+    //  print_i(x);
 
-//      x = -2+x;
-//      print_i(x+7);
-//     // }
-// }
+    //  x = -2+x;
+    //  print_i(x+7);
+    // }
+}
 
 
 // $ java -jar desc/part3/Mars4_5.jar sm nc me dummy.asm
 
-#include "minic-stdlib.h"
-int av;
-// int aw;
-void main() {
-    int aw;
-  av = 0;
-  aw = 0;
-  while (av < 6) {
-     aw = -2 + aw;
-    av = av + 1;
-  }
-  print_i(aw);
-}
+// #include "minic-stdlib.h"
+
+// // int aw;
+// void main() {
+// int av;
+// int *aw;
+//   av = 1;
+//   aw = &av;
+// //   while (av < 6) {
+// //      aw = -2 + aw;
+// //     av = av + 1;
+// //   }
+//   print_i(*aw);
+// }

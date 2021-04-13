@@ -129,6 +129,7 @@ int set(char row, int col, char mark) {
      }
    }
   }
+  // print_c(a11);
  return r;
 }
 
@@ -168,11 +169,14 @@ void selectmove(int player) {
   char row; int col; int selected; int success;
   char mark;
   selected = 1;
+  // print_i(player);
   while(selected) {
     print_s((char*)"Player ");print_i(player);print_s((char*)" select move (e.g. a2)>");
     row = read_c(); col = read_i();
 
     mark = get_mark(player);
+    // print_c('b');
+   
     success = set(row,col,mark);
       if (success == 0) {
       	 print_s((char*)"That is not a valid move!\n");
@@ -183,6 +187,7 @@ void selectmove(int player) {
 	  selected = 0;
       }
   }
+  //  print_i(player);
 }
 
 // Determines whether anybody has won.
@@ -191,7 +196,9 @@ void selectmove(int player) {
 int won(char mark) {
   int r;
   r = 0;
+  // print_c(a11);
   if (a11 == mark) {
+   
     if (a21 == mark) {
       if (a31 == mark) {
         r = 1;
@@ -262,9 +269,13 @@ void main() {
   printGame();
   player = 1; // Begin with player one
   while (playing) {
+    //  print_i(player);
     selectmove(player);
+      // print_i(player);
     mark = get_mark(player);
+    //  print_i(player);
     printGame();
+    // print_i(player);
     if (won(mark)) {                 // player won
       printWinner(player);
       playing = 0;
@@ -272,7 +283,9 @@ void main() {
       print_s((char*)"It's a draw!\n");
       playing = 0;
     } else {
+      // print_i(player);
       player = switchPlayer(player); // give the turn to the opponent
+      // print_i(player);
     }
     
     if (playing == 0) {
