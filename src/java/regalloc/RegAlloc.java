@@ -44,7 +44,7 @@ public class RegAlloc {
 						}
 						
 					});
-					System.out.println(node.uses + node.instruction.toString());
+//					System.out.println(node.uses + node.instruction.toString());
 					cfg.add(node);	
 				}
 			}));
@@ -84,7 +84,7 @@ public class RegAlloc {
 					List<Register>lop = new ArrayList<Register>(n.liveout);
 					n.liveout= new ArrayList<Register>();
 					n.succs.forEach(node -> {
-						n.liveout.addAll(node.uses);
+						n.liveout.addAll(node.livein);
 					});
 					n.liveout = new ArrayList<Register>(new HashSet<Register>(n.liveout));
 					n.livein = new ArrayList<Register>(n.uses);
@@ -99,11 +99,14 @@ public class RegAlloc {
 					}
 				}
 			}	
-		}else {
-			
 		}
 		
-		
+		cfg.forEach(n ->{
+			if(n.instruction!=null) {
+				System.out.println(n.instruction.toString() + n.livein + n.liveout);
+			}
+			
+		});
 		return cfg;
 	}
 	
@@ -346,11 +349,13 @@ public class RegAlloc {
                 // When dealign with push/pop registers, we assume that if a virtual register is used in the section, then it must be written into.
                 final AssemblyProgram.Section newSection = newProg.newSection(AssemblyProgram.Section.Type.TEXT);
                 List<AssemblyItem.Label> vrLabels = new LinkedList<>(vrMap.values());
+                //List<Register> arch = new LinkedList<>(new HashSet<>(mapping.values()));
                 List<Register> arch = new LinkedList<>(mapping.values());
 
                 List<AssemblyItem.Label> reverseVrLabels = new LinkedList<>(vrLabels);
+                List<Register> reverseArch = new LinkedList<>(arch);
                 Collections.reverse(reverseVrLabels);
-
+                Collections.reverse(reverseArch);
                 section.items.forEach(item ->
                         item.accept(new AssemblyItemVisitor() {
                             public void visitComment(AssemblyItem.Comment comment) {
@@ -378,11 +383,11 @@ public class RegAlloc {
                                     for (Register l : arch) {
                                         // load content of memory at label into $t0
                                        
-                                        newSection.emitLoad("lw", Register.Arch.t0, l, 0);
+                                        //newSection.emitLoad("lw", Register.Arch.t0, l, 0);
 
                                         // push $t0 onto stack
                                         newSection.emit("addi", Register.Arch.sp, Register.Arch.sp, -4);
-                                        newSection.emitStore("sw", Register.Arch.t0, Register.Arch.sp, 0);
+                                        newSection.emitStore("sw", l, Register.Arch.sp, 0);
                                     }
                                 } else if (insn == AssemblyItem.Instruction.popRegisters) {
                                     newSection.emit("Original instruction: popRegisters");
@@ -394,6 +399,15 @@ public class RegAlloc {
                                         // store content of $t0 in memory at label
                                         newSection.emitLA(Register.Arch.t1, l);
                                         newSection.emitStore("sw", Register.Arch.t0, Register.Arch.t1, 0);
+                                    }
+                                    for (Register l : reverseArch) {
+                                        // pop from stack into $t0
+                                        newSection.emitLoad("lw", Register.Arch.t0, Register.Arch.sp, 0);
+                                        newSection.emit("addi", Register.Arch.sp, Register.Arch.sp, 4);
+
+                                        // store content of $t0 in memory at label
+                                      
+                                        newSection.emit("move",l, Register.Arch.t0);
                                     }
                                 } else
                                 	//newSection.emit(insn.rebuild(mapping));

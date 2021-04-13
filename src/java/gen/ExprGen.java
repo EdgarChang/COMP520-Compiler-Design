@@ -60,8 +60,13 @@ public class ExprGen implements ASTVisitor<Register> {
     	
     	if(v.vd.type!=BaseType.CHAR) {
     		if(v.vd.offset != 0) {
-//    			System.out.println(v.vd.varName + "yasbish");
-    			this.section.emitLoad("lw", resReg, Register.Arch.fp, v.vd.offset); 		
+    			if(v.vd.isRegisterAllocated()) {
+//    				this.section.emit("move", resReg, v.vd.register); 	
+    				return v.vd.register;
+    			}else {
+    				this.section.emitLoad("lw", resReg, Register.Arch.fp, v.vd.offset); 	
+    			}
+    				
     		}else {
 
     			this.section.emitLoadLabel(resReg, v.vd.label);
@@ -69,8 +74,12 @@ public class ExprGen implements ASTVisitor<Register> {
 
     	}else {
     		if(v.vd.offset != 0) {
-//    			System.out.println(v.vd.varName + "yasbish");
-    			this.section.emitLoad("lb", resReg, Register.Arch.fp, v.vd.offset); 		
+
+    			if(v.vd.isRegisterAllocated()) {
+    				this.section.emitMove("move", resReg, v.vd.register); 	
+    			}else {
+    				this.section.emitLoad("lb", resReg, Register.Arch.fp, v.vd.offset); 	
+    			}
     		}else {
     		
     			this.section.emitLoadCLabel(resReg, v.vd.label);
@@ -334,6 +343,7 @@ public class ExprGen implements ASTVisitor<Register> {
 	@Override
 	public Register visitAddressOfExpr(AddressOfExpr a) {
 		// TODO Auto-generated method stub
+		
 		return null;
 	}
 

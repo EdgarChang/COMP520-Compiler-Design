@@ -57,7 +57,12 @@ public class AddrGen implements ASTVisitor<Register> {
         // TODO: to complete
     	Register resReg = new Register.Virtual();
     	if(v.vd.offset!=0) {
-    		this.section.emit("addiu", resReg, Register.Arch.fp,v.vd.offset);
+    		if(v.vd.isRegisterAllocated()) {
+    			resReg = v.vd.register;
+    		}else {
+    			this.section.emit("addiu", resReg, Register.Arch.fp,v.vd.offset);
+    		}
+    		
     	} else {
     		this.section.emitLA(resReg,v.vd.label);
     	}

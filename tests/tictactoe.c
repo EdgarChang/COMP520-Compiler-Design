@@ -56,7 +56,7 @@ int set(char row, int col, char mark) {
   if (row == 'a') {
      if (col == 1) {
         if (a11 == empty)
-	    a11 = mark;
+	        a11 = mark;
 	else
 	  r = -1;
      } else {

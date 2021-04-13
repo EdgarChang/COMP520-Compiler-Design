@@ -4,6 +4,7 @@ import ast.*;
 import gen.asm.AssemblyItem;
 import gen.asm.AssemblyProgram;
 import gen.asm.AssemblyProgram.Section;
+import gen.asm.Register.Virtual;
 import gen.asm.Register;
 import gen.asm.AssemblyItem.Label;
 
@@ -97,8 +98,9 @@ public class FunGen implements ASTVisitor<Void> {
 						array += ((ArrayType) b.varDecls.get(i).type).num - 1;
 
 					} else {
-
+						Register.Virtual r = new Register.Virtual();
 						b.varDecls.get(i).offset = -4 * (i + 1 + array);
+						b.varDecls.get(i).register = r;
 					}
 //					System.out.println(b.varDecls.get(i).offset);
 				}
@@ -121,11 +123,11 @@ public class FunGen implements ASTVisitor<Void> {
 			this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array) * -4);
 			
 
-			this.section.emit(AssemblyItem.Instruction.pushRegisters);
+//			this.section.emit(AssemblyItem.Instruction.pushRegisters);
 			for (Stmt statement : b.stmts) {
 				statement.accept(this);
 			}
-			this.section.emit(AssemblyItem.Instruction.popRegisters);
+//			this.section.emit(AssemblyItem.Instruction.popRegisters);
 
 			if (b.varDecls != null) {
 				this.section.emit("addiu", Register.Arch.sp, Register.Arch.sp, (b.varDecls.size() + array) * 4);
@@ -311,6 +313,7 @@ public class FunGen implements ASTVisitor<Void> {
 		this.ifWhile = true;
 		Label end = new AssemblyItem.Label("End");
 		Label whileLbl = new AssemblyItem.Label("While");
+//		this.section.emit(AssemblyItem.Instruction.pushRegisters);
 		this.section.emit(whileLbl);
 		Register cond = w.expression.accept(new ExprGen(asmProg, this.section, this.dataSection));
 		this.section.emit("beq", cond, Register.Arch.zero, end);
@@ -318,6 +321,7 @@ public class FunGen implements ASTVisitor<Void> {
 		this.section.emit("j", whileLbl);
 
 		this.section.emit(end);
+//		this.section.emit(AssemblyItem.Instruction.pushRegisters);
 		this.ifWhile = false;
 		return null;
 	}
@@ -346,12 +350,19 @@ public class FunGen implements ASTVisitor<Void> {
 
 		Register dst = new AddrGen(asmProg, this.section, this.dataSection).visitAssign(a);
 		Register data = new ExprGen(asmProg, this.section, this.dataSection).visitAssign(a);
-
+		if(a.expression1 instanceof VarExpr) {
+			if(((VarExpr)a.expression1).vd.isRegisterAllocated()) {
+				this.section.emitMove("move", dst, data);
+				return null;
+			}
+		}
 		if (a.expression2.type == BaseType.CHAR) {
 			this.section.emitStore("sb", data, dst, 0);
 		} else {
 			this.section.emitStore("sw", data, dst, 0);
 		}
+
+
 
 		return null;
 	}

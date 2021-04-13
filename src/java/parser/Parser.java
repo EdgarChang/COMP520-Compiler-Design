@@ -510,7 +510,7 @@ public class Parser {
     	
     	else if (accept(TokenClass.MINUS)) {
     		nextToken();
-    		Expr expression = parseExpressions();
+    		Expr expression = parseFactors();
     		BinOp negative = new BinOp(new IntLiteral(0), Op.SUB, expression);
     		return parseExpressionPrimes(negative);
     	}
@@ -532,7 +532,8 @@ public class Parser {
     	else if(accept(TokenClass.INT_LITERAL)) {
     		IntLiteral factor = new IntLiteral(Integer.parseInt(token.data));
     		nextToken();
-    		return parseExpressionPrimes(factor);
+//    		return parseExpressionPrimes(factor);
+    		return factor;
     	} 
     	
   

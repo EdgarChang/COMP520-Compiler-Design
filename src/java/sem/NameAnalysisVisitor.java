@@ -219,6 +219,10 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 	@Override
 	public Void visitAddressOfExpr(AddressOfExpr a) {
 		a.expression.accept(this);
+		if(a.expression instanceof VarExpr) {
+			((VarExpr)a.expression).vd.addressOfUse=true;
+			System.out.println("mushy musty!");
+		}
 		return null;
 	}
 
