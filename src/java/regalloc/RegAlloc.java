@@ -154,10 +154,7 @@ public class RegAlloc {
 			for(Register r : copy.keySet()) {
 				if(copy.get(r).size()<reg.length) {
 
-					//remove it from all of its neighbors
-//					copy.get(r).forEach(n ->{
-//						copy.get(n).remove(r);
-//					});
+					//remove r from its neighbors
 					List<Register> adj = copy.get(r);
 					adj.forEach(n -> copy.get(n).remove(r));
 					stack.push(r);
@@ -172,14 +169,13 @@ public class RegAlloc {
 				
 			}
 			remove.forEach(r -> {
-				List<Register> adj = copy.get(r);
-				adj.forEach(n -> copy.get(n).remove(r));
+//				List<Register> adj = copy.get(r);
+//				adj.forEach(n -> copy.get(n).remove(r));
 				copy.remove(r);
 			});
 
 			//spilling one register
 			if(!copy.isEmpty() && !tryagain[0]) {
-				System.out.println("suck it!");
 				List<Register> adj = copy.get(spill[0]);
 				adj.forEach(n -> copy.get(n).remove(spill[0]));
 				spillRegisters.push(spill[0]);
@@ -231,6 +227,7 @@ public class RegAlloc {
 
                     public void visitInstruction(AssemblyItem.Instruction insn) {
                         insn.registers().forEach(reg -> {
+                        	//if the register was spilled
                             if (map.get(reg) instanceof Register.Virtual) {
                             	Register.Virtual vr = (Register.Virtual) reg;
                                 AssemblyItem.Label l = new AssemblyItem.Label(vr.toString());
@@ -273,8 +270,9 @@ public class RegAlloc {
         		if (reg.isVirtual()&& vrMap.get(reg).isVirtual()) {
         			Register tmp = vrToAr.get(reg);
         			AssemblyItem.Label label = labelMap.get(reg);
-        			section.emitLA(tmp, label);
+           			section.emitLA(tmp, label);
         			section.emitLoad("lw", tmp, tmp, 0);
+        			
         		}
         	}
             
@@ -316,27 +314,34 @@ public class RegAlloc {
                 		Register.Arch.s3, Register.Arch.s4, Register.Arch.s5,
                 		Register.Arch.s6,Register.Arch.s7};
                 
-                Map<Register, Register> mapping = 
-                		//new HashMap<Register, Register>();
-               		chaitinColouring(inferenceGraph, tempRegs);
+                Map<Register, Register> mapping = chaitinColouring(inferenceGraph, tempRegs);
                 
-                // map from virtual register to corresponding uniquely created label
+                // map spilled registers from virtual register to corresponding uniquely created label
                 final Map<Register.Virtual, AssemblyItem.Label> vrMap = collectVirtualRegisters(section, mapping);
 
                 AssemblyProgram.Section dataSec = newProg.newSection(AssemblyProgram.Section.Type.DATA);
                 dataSec.emit("Allocated labels for virtual registers");
+                
+                //emit labels for the spilled registers
                 vrMap.forEach((vr, lbl) -> {
+//                	System.out.println(lbl);
                     dataSec.emit(lbl);
                     dataSec.emit(new AssemblyItem.Directive.Space(4));
                 });
 
-                // emit new instructions that don't use any virtual registers and transform push/pop registers instructions into real sequence of instructions
-                // When dealign with push/pop registers, we assume that if a virtual register is used in the section, then it must be written into.
+                
                 final AssemblyProgram.Section newSection = newProg.newSection(AssemblyProgram.Section.Type.TEXT);
                 List<AssemblyItem.Label> vrLabels = new LinkedList<>(vrMap.values());
                 //List<Register> arch = new LinkedList<>(new HashSet<>(mapping.values()));
                 List<Register> arch = new LinkedList<>(mapping.values());
-
+                List<Register> virtual = new ArrayList<Register>();
+                arch.forEach(n -> {
+                	if(n.isVirtual()) {
+                		virtual.add(n);
+                	}
+                });
+//                System.out.print(virtual);
+                arch.removeAll(virtual);
                 List<AssemblyItem.Label> reverseVrLabels = new LinkedList<>(vrLabels);
                 List<Register> reverseArch = new LinkedList<>(arch);
                 Collections.reverse(reverseVrLabels);
@@ -366,11 +371,7 @@ public class RegAlloc {
                                         newSection.emitStore("sw", Register.Arch.t0, Register.Arch.sp, 0);
                                     }
                                     for (Register l : arch) {
-                                        // load content of memory at label into $t0
-                                       
-                                        //newSection.emitLoad("lw", Register.Arch.t0, l, 0);
-
-                                        // push $t0 onto stack
+                                    
                                         newSection.emit("addi", Register.Arch.sp, Register.Arch.sp, -4);
                                         newSection.emitStore("sw", l, Register.Arch.sp, 0);
                                     }
@@ -390,8 +391,7 @@ public class RegAlloc {
                                         newSection.emitLoad("lw", Register.Arch.t0, Register.Arch.sp, 0);
                                         newSection.emit("addi", Register.Arch.sp, Register.Arch.sp, 4);
 
-                                        // store content of $t0 in memory at label
-                                      
+                                        // store content of $t0 in memory at registers                     
                                         newSection.emit("move",l, Register.Arch.t0);
                                     }
                                 } else

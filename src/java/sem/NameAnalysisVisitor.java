@@ -82,7 +82,7 @@ public class NameAnalysisVisitor extends BaseSemanticVisitor<Void> {
 		for(VarDecl vd : p.params) {
 			p.block.varDecls.remove(0);
 		}
-		//System.out.println(p.block.varDecls.size());
+	
 		
 		
 		return null;
