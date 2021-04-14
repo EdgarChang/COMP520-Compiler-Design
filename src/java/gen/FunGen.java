@@ -97,8 +97,10 @@ public class FunGen implements ASTVisitor<Void> {
 					
 						array += ((ArrayType) b.varDecls.get(i).type).num - 1;
 
-					} else {
+					} else if(b.varDecls.get(i).type.getClass() == StructType.class) {
 						
+						b.varDecls.get(i).offset = -4 * (i + 1 + array);
+					} else {
 						b.varDecls.get(i).offset = -4 * (i + 1 + array);
 						if(!b.varDecls.get(i).addressOfUse) {
 							Register.Virtual r = new Register.Virtual();

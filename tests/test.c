@@ -44,13 +44,18 @@ void main(){
     // print_i(hello1(1));
     // print_i(hello2(1));
     // x=3;
-    print_i(hello3(x));
-    print_i(x);
+    // print_i(hello3(x));
+    // print_i(x);
     x=3;
-    // while(x<5){
-    //     x = x+1;
-    //     print_i(x);
-    // }
+    while(x<5){
+        if(x%2>0){
+             x = x-1;
+        }else{
+             x = x+1;
+        }
+       
+        print_i(x);
+    }
     // while(x>1){
     //     int s[1000];
     //     s[700]=9;

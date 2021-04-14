@@ -101,12 +101,12 @@ public class RegAlloc {
 			}	
 		}
 		
-		cfg.forEach(n ->{
-			if(n.instruction!=null) {
-				System.out.println(n.instruction.toString() + n.livein + n.liveout);
-			}
-			
-		});
+//		cfg.forEach(n ->{
+//			if(n.instruction!=null) {
+////				System.out.println(n.instruction.toString() + n.livein + n.liveout);
+//			}
+//			
+//		});
 		return cfg;
 	}
 	
@@ -176,31 +176,10 @@ public class RegAlloc {
 				adj.forEach(n -> copy.get(n).remove(r));
 				copy.remove(r);
 			});
-//			copy.forEach((v,adj) -> {
-//				
-//				if(adj.size()<reg.length) {
-//					
-//					//remove it from all of its neighbors
-//					adj.forEach(n ->{
-//						copy.get(n).remove(v);
-//					});
-//					stack.push(v);
-//					copy.remove(v);
-//					tryagain[0] = true;
-//				}else {
-//					if(adj.size()>max[0]) {
-//						max[0] = adj.size();
-//						spill[0] = v;
-//					}
-//				}
-//			});
+
 			//spilling one register
 			if(!copy.isEmpty() && !tryagain[0]) {
-				
-				//remove it from all of its neighbors
-//				copy.get(spill[0]).forEach(n ->{
-//					copy.get(n).remove(spill[0]);
-//				});
+				System.out.println("suck it!");
 				List<Register> adj = copy.get(spill[0]);
 				adj.forEach(n -> copy.get(n).remove(spill[0]));
 				spillRegisters.push(spill[0]);
