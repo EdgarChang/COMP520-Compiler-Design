@@ -46,6 +46,14 @@ void main(){
     // x=3;
     // print_i(hello3(x));
     // print_i(x);
+    int av;
+    int *aw;
+    av = 1;
+    aw = &av;
+//   while (av < 6) {
+//      aw = -2 + aw;
+//     av = av + 1;
+//   }
     x=3;
     while(x<5){
         if(x%2>0){

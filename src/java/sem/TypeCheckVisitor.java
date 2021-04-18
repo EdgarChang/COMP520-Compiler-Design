@@ -300,12 +300,32 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 			error("No assignment for void and array type");
 			
 		}
-		if(e1.getClass() != e2.getClass()) {
-			System.out.println(e1);
-			System.out.println(e2);
-			error("Incompatible assignment");
+		if(e1 != e2) {
+			if(e1 instanceof PointerType && e2 instanceof PointerType) {
+				Type e3 = e1.accept(this);
+				Type e4 = e2.accept(this);
+				if(e3!=e4) {
+					error("Incompatible assignment");
+				}
+			}
+			
+			else if(e1 instanceof ArrayType && e2 instanceof ArrayType) {
+				Type e3 = e1.accept(this);
+				Type e4 = e2.accept(this);
+				if(e3!=e4) {
+					error("Incompatible assignment");
+				}
+			}
+			else {
+				System.out.println(e1);
+				System.out.println(e2);
+				error("Incompatible assignment");
+			}
+			
+			
 			
 		}
+	
 		if(a.expression1.getClass()!=VarExpr.class && a.expression1.getClass()!=FieldAccessExpr.class
 				&& a.expression1.getClass()!= ArrayAccessExpr.class && a.expression1.getClass()!=ValueAtExpr.class ) {
 			error("Invalid lvalues");
@@ -346,13 +366,13 @@ public class TypeCheckVisitor extends BaseSemanticVisitor<Type> {
 	@Override
 	public Type visitPointerType(PointerType p) {
 		// TODO Auto-generated method stub
-		return null;
+		return p.type.accept(this);
 	}
 
 	@Override
 	public Type visitArrayType(ArrayType a) {
 		// TODO Auto-generated method stub
-		return null;
+		return a.type.accept(this);
 	}
 
 	// To be completed...
